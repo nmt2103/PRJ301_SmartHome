@@ -1,0 +1,71 @@
+package dto;
+
+public class RoomDTO {
+
+  private int id;
+  private int homeId;
+  private String name;
+  private int floor;
+  private String type;
+  private String status;
+
+  public RoomDTO() {
+  }
+
+  public RoomDTO(int id, int homeId, String name, int floor, String type, String status) {
+    this.id = id;
+    this.homeId = homeId;
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public int getHomeId() {
+    return homeId;
+  }
+
+  public void setHomeId(int homeId) {
+    this.homeId = homeId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getFloor() {
+    return floor;
+  }
+
+  public void setFloor(int floor) {
+    this.floor = floor;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+}

@@ -1,17 +1,17 @@
 package controller;
 
-import dao.UserDAO;
-import dto.UserDTO;
+import dao.RoomDAO;
+import dto.RoomDTO;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "RoomServlet", urlPatterns = {"/RoomServlet"})
+public class RoomServlet extends HttpServlet {
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -25,22 +25,15 @@ public class LoginServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
 
-    if (request.getMethod().equalsIgnoreCase("POST")) {
-      String user = request.getParameter("username");
-      String pass = request.getParameter("password");
+    if (request.getMethod().equalsIgnoreCase("GET")) {
+      String searchName = request.getParameter("searchName");
+      String filterStatus = request.getParameter("filterStatus");
 
-      UserDAO userDAO = new UserDAO();
-      UserDTO loginUser = userDAO.checkLogin(user, pass);
+      RoomDAO roomDAO = new RoomDAO();
+      List<RoomDTO> rooms = roomDAO.getRooms(searchName, filterStatus);
 
-      if (loginUser != null) {
-        HttpSession session = request.getSession();
-        session.setAttribute("LOGIN_USER", loginUser);
-
-        response.sendRedirect("home.jsp");
-      } else {
-        request.setAttribute("ERROR_MSG", "Invalid username or password.");
-        request.getRequestDispatcher("login.jsp").forward(request, response);
-      }
+      request.setAttribute("ROOM_LIST", rooms);
+      request.getRequestDispatcher("room.jsp").forward(request, response);
     }
   }
 
