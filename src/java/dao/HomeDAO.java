@@ -1,0 +1,125 @@
+package dao;
+
+import dto.HomeDTO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import util.DBUtils;
+
+public class HomeDAO {
+
+  public boolean insertHome(HomeDTO home) {
+    String sql = "INSERT INTO HOME (CODE, NAME, ADDRESS, STATUS, CREATE_AT) VALUES (?, ?, ?, ?, GETDATE())";
+
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement ptm = conn.prepareStatement(sql)) {
+
+      ptm.setString(1, home.getCode());
+      ptm.setString(2, home.getName());
+      ptm.setString(3, home.getAddress());
+      ptm.setString(4, home.getStatus());
+
+      return ptm.executeUpdate() > 0;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
+
+//  public List<HomeDTO> getAllHomes(String name) {
+//    List<HomeDTO> searchedList = new ArrayList<>();
+//    String sql = "SELECT * FROM HOME WHERE NAME LIKE ?";
+//
+//    try ( Connection conn = DBUtils.getConnection();
+//             PreparedStatement ptm = conn.prepareStatement(sql)) {
+//
+//      ptm.setString(1, name);
+//
+//      ResultSet rs = ptm.executeQuery();
+//      while (rs.next()) {
+//        searchedList.add(new HomeDTO(
+//                rs.getInt("ID"), rs.getString("CODE"),
+//                rs.getString("NAME"), rs.getString("ADDRESS"),
+//                rs.getString("STATUS"), rs.getTimestamp("CREATE_AT")));
+//      }
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
+//
+//    return searchedList;
+//  }
+  public List<HomeDTO> getHomes(String name, String status) {
+    List<HomeDTO> searchedList = new ArrayList<>();
+    StringBuilder sql = new StringBuilder("SELECT * FROM HOME WHERE 1=1");
+    List<Object> parameters = new ArrayList<>();
+
+    if (name != null && !name.trim().isEmpty()) {
+      sql.append(" AND NAME LIKE ?");
+      parameters.add("%" + name + "%");
+    }
+
+    if (status != null && !status.trim().isEmpty()) {
+      sql.append(" AND STATUS = ?");
+      parameters.add(status);
+    }
+
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement ptm = conn.prepareStatement(sql.toString())) {
+
+      for (int i = 0; i < parameters.size(); i++) {
+        ptm.setObject(i + 1, parameters.get(i));
+      }
+
+      ResultSet rs = ptm.executeQuery();
+      while (rs.next()) {
+        searchedList.add(new HomeDTO(
+                rs.getInt("ID"), rs.getString("CODE"),
+                rs.getString("NAME"), rs.getString("ADDRESS"),
+                rs.getString("STATUS"), rs.getTimestamp("CREATE_AT")));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return searchedList;
+  }
+
+  public boolean updateHome(HomeDTO home) {
+    String sql = "UPDATE HOME SET CODE=?, NAME=?, ADDRESS=?, STATUS=? WHERE ID=?";
+
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement ptm = conn.prepareStatement(sql)) {
+
+      ptm.setString(1, home.getCode());
+      ptm.setString(2, home.getName());
+      ptm.setString(3, home.getAddress());
+      ptm.setString(4, home.getStatus());
+      ptm.setInt(1, home.getId());
+
+      return ptm.executeUpdate() > 0;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
+
+  public boolean deleteHome(String id) {
+    String sql = "DELETE FROM HOME WHERE ID=?";
+
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement ptm = conn.prepareStatement(sql)) {
+
+      ptm.setString(1, id);
+
+      return ptm.executeUpdate() > 0;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
+}

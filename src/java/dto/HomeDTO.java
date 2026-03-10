@@ -1,83 +1,73 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dto;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
-/**
- *
- * @author DELL
- */
 public class HomeDTO {
 
-    private int id;
-    private String code;
-    private String name;
-    private String address;
-    private String status;
-    private LocalDate createAt;
+  private int id;
+  private String code;
+  private String name;
+  private String address;
+  private String status;
+  private Timestamp created_at;
 
-    public HomeDTO() {
-    }
+  public HomeDTO() {
+  }
 
-    public HomeDTO(int id, String code, String name, String address, String status, LocalDate createAt) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.address = address;
-        this.status = status;
-        this.createAt = createAt;
-    }
+  public HomeDTO(int id, String code, String name, String address, String status, Timestamp created_at) {
+    this.id = id;
+    this.code = code;
+    this.name = name;
+    this.address = address;
+    this.status = status;
+    this.created_at = created_at;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getAddress() {
-        return address;
-    }
+  public String getAddress() {
+    return address;
+  }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-    public LocalDate getCreateAt() {
-        return createAt;
-    }
+  public Timestamp getCreated_at() {
+    return created_at;
+  }
 
-    public void setCreate_at(LocalDate createAt) {
-        this.createAt = createAt;
-    }
-
-    
+  public void setCreated_at(Timestamp created_at) {
+    this.created_at = created_at;
+  }
 }
