@@ -52,11 +52,11 @@
           <td><%= room.getType()%></td>
           <td><%= room.getStatus()%></td>
           <td>
-            <form action="HomeServlet" method="POST">
+            <form action="RoomServlet" method="POST">
               <input type="submit" value="Update">
               <input type="hidden" name="homeId" value="<%= room.getId()%>">
             </form>
-            <form action="HomeServlet" method="POST">
+            <form action="RoomServlet" method="POST">
               <input type="submit" value="Delete">
               <input type="hidden" name="homeId" value="<%= room.getId()%>">
             </form>
@@ -65,6 +65,6 @@
         <%}%>
       </tbody>
     </table>
-    <a href="home.jsp">Home Page</a>
+    <a href="HomeServlet">Home Page</a>
   </body>
 </html>

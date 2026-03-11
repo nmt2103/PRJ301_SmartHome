@@ -2,16 +2,8 @@
 <%@page import="dto.HomeDTO"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-
-<%
-  HomeDAO homeDAO = new HomeDAO();
-
-  List<HomeDTO> homes = homeDAO.getHomes("", "");
-  if (request.getAttribute("HOME_LIST") != null) {
-    homes = (List<HomeDTO>) request.getAttribute("HOME_LIST");
-  }
-%>
 
 <html>
   <head>
@@ -22,14 +14,31 @@
     <h1>Homes</h1>
 
     <form action="HomeServlet">
+      <label for="searchName">Search:</label>
       <input type="text" name="searchName" placeholder="Enter home name...">
       <br>
-      <select name="filterStatus">
+      <label for="filterStatus">Status:</label>
+      <select id="filterStatus" name="filterStatus">
         <option value="active">Active</option>
         <option value="inactive">Inactive</option>
       </select>
       <br>
-      <input type="submit" value="Search">
+      <input type="submit" name="action" value="Search">
+    </form>
+
+    <c:if test="${not empty ERROR_MSG}">
+      <p>
+        ${ERROR_MSG}
+      </p>
+    </c:if>
+    <c:if test="${not empty SUCCESS_MSG}">
+      <p>
+        ${SUCCESS_MSG}
+      </p>
+    </c:if>
+
+    <form action="HomeServlet">
+      <input type="submit" name="action" value="Add">
     </form>
 
     <table border="1" cellpadding="1">
@@ -44,27 +53,29 @@
       </thead>
       <tbody>
 
-        <% for (HomeDTO home : homes) {%>
-        <tr>
-          <td><%= home.getCode()%></td>
-          <td><%= home.getName()%></td>
-          <td><%= home.getAddress()%></td>
-          <td><%= home.getStatus()%></td>
-          <td>
-            <form action="HomeServlet" method="POST">
-              <input type="submit" value="Update">
-              <input type="hidden" name="homeId" value="<%= home.getId()%>">
-            </form>
-            <form action="HomeServlet" method="POST">
-              <input type="submit" value="Delete">
-              <input type="hidden" name="homeId" value="<%= home.getId()%>">
-            </form>
-          </td>
-        </tr>
-        <%}%>
+        <c:forEach items="${HOME_LIST}" var="home">
+
+          <tr>
+            <td>${home.code}</td>
+            <td>${home.name}</td>
+            <td>${home.address}</td>
+            <td>${home.status}</td>
+            <td>
+              <form action="HomeServlet">
+                <input type="submit" name="action" value="Update">
+                <input type="hidden" name="homeId" value=${home.id}>
+              </form>
+              <form action="HomeServlet" method="POST">
+                <input type="submit" name="action" value="Delete">
+                <input type="hidden" name="homeId" value=${home.id}>
+              </form>
+            </td>
+          </tr>
+
+        </c:forEach>
 
       </tbody>
     </table>
-    <a href="room.jsp">Room Page</a>
+    <a href="RoomServlet">Room Page</a>
   </body>
 </html>

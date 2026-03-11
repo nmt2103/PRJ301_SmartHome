@@ -29,28 +29,6 @@ public class HomeDAO {
     return false;
   }
 
-//  public List<HomeDTO> getAllHomes(String name) {
-//    List<HomeDTO> searchedList = new ArrayList<>();
-//    String sql = "SELECT * FROM HOME WHERE NAME LIKE ?";
-//
-//    try ( Connection conn = DBUtils.getConnection();
-//             PreparedStatement ptm = conn.prepareStatement(sql)) {
-//
-//      ptm.setString(1, name);
-//
-//      ResultSet rs = ptm.executeQuery();
-//      while (rs.next()) {
-//        searchedList.add(new HomeDTO(
-//                rs.getInt("ID"), rs.getString("CODE"),
-//                rs.getString("NAME"), rs.getString("ADDRESS"),
-//                rs.getString("STATUS"), rs.getTimestamp("CREATE_AT")));
-//      }
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//
-//    return searchedList;
-//  }
   public List<HomeDTO> getHomes(String name, String status) {
     List<HomeDTO> searchedList = new ArrayList<>();
     StringBuilder sql = new StringBuilder("SELECT * FROM HOME WHERE 1=1");
@@ -87,6 +65,27 @@ public class HomeDAO {
     return searchedList;
   }
 
+  public HomeDTO getHomeById(String id) {
+    HomeDTO home = null;
+    String sql = "SELECT * FROM HOME WHERE ID=?";
+
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement ptm = conn.prepareStatement(sql)) {
+
+      ptm.setString(1, id);
+      ResultSet rs = ptm.executeQuery();
+      if (rs.next()) {
+        home = new HomeDTO(rs.getInt("ID"), rs.getString("CODE"),
+                rs.getString("NAME"), rs.getString("ADDRESS"),
+                rs.getString("STATUS"), rs.getTimestamp("CREATE_AT"));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return home;
+  }
+
   public boolean updateHome(HomeDTO home) {
     String sql = "UPDATE HOME SET CODE=?, NAME=?, ADDRESS=?, STATUS=? WHERE ID=?";
 
@@ -97,7 +96,7 @@ public class HomeDAO {
       ptm.setString(2, home.getName());
       ptm.setString(3, home.getAddress());
       ptm.setString(4, home.getStatus());
-      ptm.setInt(1, home.getId());
+      ptm.setInt(5, home.getId());
 
       return ptm.executeUpdate() > 0;
     } catch (Exception e) {
@@ -107,13 +106,13 @@ public class HomeDAO {
     return false;
   }
 
-  public boolean deleteHome(String id) {
+  public boolean deleteHome(int id) {
     String sql = "DELETE FROM HOME WHERE ID=?";
 
     try ( Connection conn = DBUtils.getConnection();
              PreparedStatement ptm = conn.prepareStatement(sql)) {
 
-      ptm.setString(1, id);
+      ptm.setInt(1, id);
 
       return ptm.executeUpdate() > 0;
     } catch (Exception e) {
