@@ -33,7 +33,7 @@ public class RoomServlet extends HttpServlet {
       List<RoomDTO> rooms = roomDAO.getRooms(searchName, filterStatus);
 
       request.setAttribute("ROOM_LIST", rooms);
-      request.getRequestDispatcher("room.jsp").forward(request, response);
+      request.getRequestDispatcher("Room.jsp").forward(request, response);
     }
   }
 

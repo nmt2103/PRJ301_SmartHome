@@ -25,15 +25,93 @@ public class HomeServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
 
+    String action = request.getParameter("action");
+    System.out.println(action);
+    HomeDAO homeDAO = new HomeDAO();
+
     if (request.getMethod().equalsIgnoreCase("GET")) {
-      String searchName = request.getParameter("searchName");
-      String filterStatus = request.getParameter("filterStatus");
 
-      HomeDAO homeDAO = new HomeDAO();
-      List<HomeDTO> homes = homeDAO.getHomes(searchName, filterStatus);
+      if (action == null || action.isEmpty()) {
+        List<HomeDTO> homes = homeDAO.getHomes("", "");
 
-      request.setAttribute("HOME_LIST", homes);
-      request.getRequestDispatcher("home.jsp").forward(request, response);
+        request.setAttribute("HOME_LIST", homes);
+        request.getRequestDispatcher("Home.jsp").forward(request, response);
+
+      } else if (action.equalsIgnoreCase("search")) {
+        String searchName = request.getParameter("searchName");
+        String filterStatus = request.getParameter("filterStatus");
+
+        List<HomeDTO> homes = homeDAO.getHomes(searchName, filterStatus);
+
+        if (homes == null || homes.isEmpty()) {
+          homes = homeDAO.getHomes("", "");
+
+          request.setAttribute("ERROR_MSG", "Home not found! Showing all homes.");
+        }
+
+        request.setAttribute("HOME_LIST", homes);
+        request.getRequestDispatcher("Home.jsp").forward(request, response);
+
+      } else if (action.equalsIgnoreCase("update")) {
+        String homeId = request.getParameter("homeId");
+
+        HomeDTO home = homeDAO.getHomeById(homeId);
+
+        request.setAttribute("ACTION", action);
+        request.setAttribute("HOME", home);
+        request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+
+      } else if (action.equalsIgnoreCase("add")) {
+        request.setAttribute("ACTION", action);
+        request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+
+      }
+    } else {
+      if (action.equalsIgnoreCase("update")) {
+        int id = Integer.parseInt(request.getParameter("homeId"));
+        String code = request.getParameter("code");
+        String name = request.getParameter("name");
+        String address = request.getParameter("address");
+        String status = request.getParameter("status").toUpperCase();
+
+        HomeDTO updHome = new HomeDTO(id, code, name, address, status);
+        boolean isSuccess = homeDAO.updateHome(updHome);
+        if (isSuccess) {
+          request.setAttribute("SUCCESS_MSG", "Home updated successfully.");
+          response.sendRedirect("HomeServlet");
+        } else {
+          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+          request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+        }
+
+      } else if (action.equalsIgnoreCase("delete")) {
+        int id = Integer.parseInt(request.getParameter("homeId"));
+
+        boolean isSuccess = homeDAO.deleteHome(id);
+        if (isSuccess) {
+          request.setAttribute("SUCCESS_MSG", "Home deleted successfully.");
+          response.sendRedirect("HomeServlet");
+        } else {
+          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+          request.getRequestDispatcher("Home.jsp").forward(request, response);
+        }
+
+      } else if (action.equalsIgnoreCase("add")) {
+        String code = request.getParameter("code");
+        String name = request.getParameter("name");
+        String address = request.getParameter("address");
+        String status = request.getParameter("status").toUpperCase();
+
+        HomeDTO addHome = new HomeDTO(code, name, address, status);
+        boolean isSuccess = homeDAO.insertHome(addHome);
+        if (isSuccess) {
+          request.setAttribute("SUCCESS_MSG", "Home added successfully.");
+          response.sendRedirect("HomeServlet");
+        } else {
+          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+          request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+        }
+      }
     }
   }
 
