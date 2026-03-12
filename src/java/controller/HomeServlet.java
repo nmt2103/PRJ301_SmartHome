@@ -26,7 +26,6 @@ public class HomeServlet extends HttpServlet {
     response.setContentType("text/html;charset=UTF-8");
 
     String action = request.getParameter("action");
-    System.out.println(action);
     HomeDAO homeDAO = new HomeDAO();
 
     if (request.getMethod().equalsIgnoreCase("GET")) {
@@ -52,6 +51,10 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("HOME_LIST", homes);
         request.getRequestDispatcher("Home.jsp").forward(request, response);
 
+      } else if (action.equalsIgnoreCase("add")) {
+        request.setAttribute("ACTION", action);
+        request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+
       } else if (action.equalsIgnoreCase("update")) {
         String homeId = request.getParameter("homeId");
 
@@ -61,13 +64,26 @@ public class HomeServlet extends HttpServlet {
         request.setAttribute("HOME", home);
         request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
 
-      } else if (action.equalsIgnoreCase("add")) {
-        request.setAttribute("ACTION", action);
-        request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
-
       }
     } else {
-      if (action.equalsIgnoreCase("update")) {
+
+      if (action.equalsIgnoreCase("add")) {
+        String code = request.getParameter("code");
+        String name = request.getParameter("name");
+        String address = request.getParameter("address");
+        String status = request.getParameter("status").toUpperCase();
+
+        HomeDTO addHome = new HomeDTO(code, name, address, status);
+        boolean isSuccess = homeDAO.insertHome(addHome);
+        if (isSuccess) {
+          request.setAttribute("SUCCESS_MSG", "Home added successfully.");
+          response.sendRedirect("HomeServlet");
+        } else {
+          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+          request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+        }
+
+      } else if (action.equalsIgnoreCase("update")) {
         int id = Integer.parseInt(request.getParameter("homeId"));
         String code = request.getParameter("code");
         String name = request.getParameter("name");
@@ -96,21 +112,6 @@ public class HomeServlet extends HttpServlet {
           request.getRequestDispatcher("Home.jsp").forward(request, response);
         }
 
-      } else if (action.equalsIgnoreCase("add")) {
-        String code = request.getParameter("code");
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String status = request.getParameter("status").toUpperCase();
-
-        HomeDTO addHome = new HomeDTO(code, name, address, status);
-        boolean isSuccess = homeDAO.insertHome(addHome);
-        if (isSuccess) {
-          request.setAttribute("SUCCESS_MSG", "Home added successfully.");
-          response.sendRedirect("HomeServlet");
-        } else {
-          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-          request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
-        }
       }
     }
   }
