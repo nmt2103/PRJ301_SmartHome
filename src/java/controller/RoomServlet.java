@@ -1,6 +1,8 @@
 package controller;
 
+import dao.HomeDAO;
 import dao.RoomDAO;
+import dto.HomeDTO;
 import dto.RoomDTO;
 import java.io.IOException;
 import java.util.List;
@@ -25,15 +27,99 @@ public class RoomServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
 
+    String action = request.getParameter("action");
+    RoomDAO roomDAO = new RoomDAO();
+
     if (request.getMethod().equalsIgnoreCase("GET")) {
-      String searchName = request.getParameter("searchName");
-      String filterStatus = request.getParameter("filterStatus");
 
-      RoomDAO roomDAO = new RoomDAO();
-      List<RoomDTO> rooms = roomDAO.getRooms(searchName, filterStatus);
+      if (action == null || action.isEmpty()) {
+        List<RoomDTO> rooms = roomDAO.getRooms("", "");
 
-      request.setAttribute("ROOM_LIST", rooms);
-      request.getRequestDispatcher("room.jsp").forward(request, response);
+        request.setAttribute("ROOM_LIST", rooms);
+        request.getRequestDispatcher("Room.jsp").forward(request, response);
+
+      } else if (action.equalsIgnoreCase("search")) {
+        String searchName = request.getParameter("searchName");
+        String filterStatus = request.getParameter("filterStatus");
+
+        List<RoomDTO> rooms = roomDAO.getRooms(searchName, filterStatus);
+
+        if (rooms == null | rooms.isEmpty()) {
+          rooms = roomDAO.getRooms("", "");
+
+          request.setAttribute("ERROR_MSG", "Room not found! Showing all rooms.");
+        }
+
+        request.setAttribute("ROOM_LIST", rooms);
+        request.getRequestDispatcher("Room.jsp").forward(request, response);
+
+      } else if (action.equalsIgnoreCase("add")) {
+        HomeDAO homeDAO = new HomeDAO();
+        List<HomeDTO> homes = homeDAO.getHomes("", "ACTIVE");
+
+        request.setAttribute("ACTION", action);
+        request.setAttribute("HOME_LIST", homes);
+        request.getRequestDispatcher("ModifyRoom.jsp").forward(request, response);
+
+      } else if (action.equalsIgnoreCase("update")) {
+        String roomId = request.getParameter("roomId");
+
+        RoomDTO room = roomDAO.getRoomById(roomId);
+
+        request.setAttribute("ACTION", action);
+        request.setAttribute("ROOM", room);
+        request.getRequestDispatcher("ModifyRoom.jsp").forward(request, response);
+
+      }
+    } else {
+
+      if (action.equalsIgnoreCase("add")) {
+        int homeId = Integer.parseInt(request.getParameter("homeId"));
+        String name = request.getParameter("name");
+        int floor = Integer.parseInt(request.getParameter("floor"));
+        String type = request.getParameter("type");
+        String status = request.getParameter("status").toUpperCase();
+
+        RoomDTO addRoom = new RoomDTO(homeId, floor, name, type, status);
+        boolean isSucces = roomDAO.insertRoom(addRoom);
+        if (isSucces) {
+          request.setAttribute("SUCCESS_MSG", "Room added successfully.");
+          response.sendRedirect("RoomServlet");
+        } else {
+          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+          request.getRequestDispatcher("ModifyRoom.jsp").forward(request, response);
+        }
+
+      } else if (action.equalsIgnoreCase("update")) {
+        int id = Integer.parseInt(request.getParameter("roomId"));
+        String name = request.getParameter("name");
+        int floor = Integer.parseInt(request.getParameter("floor"));
+        String type = request.getParameter("type");
+        String status = request.getParameter("status").toUpperCase();
+
+        RoomDTO updRoom = new RoomDTO(id, name, floor, type, status);
+        boolean isSuccess = roomDAO.updateRoom(updRoom);
+        if (isSuccess) {
+          request.setAttribute("SUCCESS_MSG", "Room updated successfully.");
+          response.sendRedirect("RoomServlet");
+        } else {
+          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+          request.getRequestDispatcher("ModifyRoom.jsp").forward(request, response);
+        }
+
+      } else if (action.equalsIgnoreCase("delete")) {
+        int id = Integer.parseInt(request.getParameter("roomId"));
+
+        boolean isSuccess = roomDAO.deleteRoom(id);
+        if (isSuccess) {
+          request.setAttribute("SUCCESS_MSG", "Room deleted successfully.");
+          response.sendRedirect("RoomServlet");
+        } else {
+          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+          request.getRequestDispatcher("Room.jsp").forward(request, response);
+        }
+
+      }
     }
   }
 

@@ -2,70 +2,93 @@ package dto;
 
 public class RoomDTO {
 
-    private int id;
-    private HomeDTO homeId;
-    private String name;
-    private int floor;
-    private String type;
-    private String status;
+  private int id;
+  private int homeId;
+  private String name;
+  private int floor;
+  private String type;
+  private String status;
 
-    public RoomDTO() {
-    }
+  public RoomDTO() {
+  }
 
-    public RoomDTO(int id, HomeDTO homeId, String name, int floor, String type, String status) {
-        this.id = id;
-        this.homeId = homeId;
-        this.name = name;
-        this.floor = floor;
-        this.type = type;
-        this.status = status;
-    }
+  public RoomDTO(int id, String name, int floor, String type, String status) {
+    this.id = id;
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public RoomDTO(int homeId, int floor, String name, String type, String status) {
+    this.homeId = homeId;
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public RoomDTO(String name, int floor, String type, String status) {
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
 
-    public HomeDTO getHomeId() {
-        return homeId;
-    }
+  public RoomDTO(int id, int homeId, String name, int floor, String type, String status) {
+    this.id = id;
+    this.homeId = homeId;
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
 
-    public void setHomeId(HomeDTO homeId) {
-        this.homeId = homeId;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public int getHomeId() {
+    return homeId;
+  }
 
-    public int getFloor() {
-        return floor;
-    }
+  public void setHomeId(int homeId) {
+    this.homeId = homeId;
+  }
 
-    public void setFloor(int floor) {
-        this.floor = floor;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public int getFloor() {
+    return floor;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public void setFloor(int floor) {
+    this.floor = floor;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
 }

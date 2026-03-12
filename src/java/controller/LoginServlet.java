@@ -25,7 +25,12 @@ public class LoginServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
 
-    if (request.getMethod().equalsIgnoreCase("POST")) {
+    if (request.getMethod().equalsIgnoreCase("GET")) {
+      request.setAttribute("MSG", "Logged out.");
+      request.getRequestDispatcher("Login.jsp").forward(request, response);
+
+    } else {
+
       String user = request.getParameter("username");
       String pass = request.getParameter("password");
 
@@ -36,11 +41,12 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("LOGIN_USER", loginUser);
 
-        response.sendRedirect("home.jsp");
+        response.sendRedirect("HomeServlet");
       } else {
         request.setAttribute("ERROR_MSG", "Invalid username or password.");
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("Login.jsp").forward(request, response);
       }
+
     }
   }
 

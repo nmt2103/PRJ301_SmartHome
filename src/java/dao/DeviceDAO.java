@@ -61,116 +61,123 @@ public class DeviceDAO {
         }
         return list;
     }
+    return list;
+  }
 
-    public boolean createDevice(DeviceDTO dev) {
-        boolean check = false;
-        String query = "INSERT INTO DEVICE (TYPE, SERIAL_NO, VENDOR, STATUS, LAST_SEEN_ST, ROOM_ID) VALUES (?,?,?,?,?,?)";
+  public boolean createDevice(DeviceDTO dev) {
+    boolean check = false;
+    String query = "INSERT INTO DEVICE (TYPE, SERIAL_NO, VENDOR, STATUS, LAST_SEEN_ST, ROOM_ID) VALUES (?,?,?,?,?,?)";
 
-        try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, dev.getType());
-            stmt.setString(2, dev.getSerial());
-            stmt.setString(3, dev.getVendor());
-            stmt.setString(4, dev.getStatus());
-            stmt.setTimestamp(5, dev.getLastSeen());
-            stmt.setInt(6, dev.getRoomId().getId());
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setString(1, dev.getType());
+      stmt.setString(2, dev.getSerial());
+      stmt.setString(3, dev.getVendor());
+      stmt.setString(4, dev.getStatus());
+      stmt.setTimestamp(5, dev.getLastSeen());
+      stmt.setInt(6, dev.getRoomId().getId());
 
-            if (stmt.executeUpdate() > 0) {
-                check = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check;
+      if (stmt.executeUpdate() > 0) {
+        check = true;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return check;
+  }
 
-    public boolean updateDevice(DeviceDTO dev) {
-        boolean check = false;
-        String query = "UPDATE DEVICE"
-                + "SET TYPE = ?, SERIAL_NO = ?, VENDOR = ?, STATUS = ?, LAST_SEEN_ST = ?, ROOM_ID = ?"
-                + "WHERE ID = ?";
-        try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, dev.getType());
-            stmt.setString(2, dev.getSerial());
-            stmt.setString(3, dev.getVendor());
-            stmt.setString(4, dev.getStatus());
-            stmt.setTimestamp(5, dev.getLastSeen());
-            stmt.setInt(6, dev.getRoomId().getId());
-            stmt.setInt(7, dev.getId());
+  public boolean updateDevice(DeviceDTO dev) {
+    boolean check = false;
+    String query = "UPDATE DEVICE"
+            + "SET TYPE = ?, SERIAL_NO = ?, VENDOR = ?, STATUS = ?, LAST_SEEN_ST = ?, ROOM_ID = ?"
+            + "WHERE ID = ?";
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setString(1, dev.getType());
+      stmt.setString(2, dev.getSerial());
+      stmt.setString(3, dev.getVendor());
+      stmt.setString(4, dev.getStatus());
+      stmt.setTimestamp(5, dev.getLastSeen());
+      stmt.setInt(6, dev.getRoomId().getId());
+      stmt.setInt(7, dev.getId());
 
-            if (stmt.executeUpdate() > 0) {
-                check = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check;
+      if (stmt.executeUpdate() > 0) {
+        check = true;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return check;
+  }
 
-    public boolean deleteDevice(int deviceId) {
-        boolean check = false;
-        String query = "UPDATE DEVICE SET STATUS = 'Removed' WHERE ID = ?";
-        try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
+  public boolean deleteDevice(int deviceId) {
+    boolean check = false;
+    String query = "UPDATE DEVICE SET STATUS = 'Removed' WHERE ID = ?";
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, deviceId);
-            if (stmt.executeUpdate() > 0) {
-                check = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check;
+      stmt.setInt(1, deviceId);
+      if (stmt.executeUpdate() > 0) {
+        check = true;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return check;
+  }
 
-    public DeviceDTO getDeviceById(int id) {
-        DeviceDTO dev = null;
-        String query = "SELECT * FROM DEVICE WHERE ID = ?";
-        try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
+  public DeviceDTO getDeviceById(int id) {
+    DeviceDTO dev = null;
+    String query = "SELECT * FROM DEVICE WHERE ID = ?";
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setInt(1, id);
 
-            ResultSet rs = stmt.executeQuery();
+      ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                int devId = rs.getInt("ID");
-                String type = rs.getString("TYPE");
-                String serial = rs.getString("SERIAL_NO");
-                String vendor = rs.getString("VENDOR");
-                String status = rs.getString("STATUS");
-                Timestamp lastSeen = rs.getTimestamp("LAST_SEEN_ST");
+      if (rs.next()) {
+        int devId = rs.getInt("ID");
+        String type = rs.getString("TYPE");
+        String serial = rs.getString("SERIAL_NO");
+        String vendor = rs.getString("VENDOR");
+        String status = rs.getString("STATUS");
+        Timestamp lastSeen = rs.getTimestamp("LAST_SEEN_ST");
 
-                int roomId = rs.getInt("ROOM_ID");
-                RoomDTO room = new RoomDTO();
-                room.setId(roomId);
+        int roomId = rs.getInt("ROOM_ID");
+        RoomDTO room = new RoomDTO();
+        room.setId(roomId);
 
-                dev = new DeviceDTO(id, type, serial, vendor, status, lastSeen, room);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dev;
+        dev = new DeviceDTO(id, type, serial, vendor, status, lastSeen, room);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return dev;
+  }
 
-    public boolean toggleDeviceStatus(int devId, String status) {
-        boolean check = false;
-        String newStatus = "";
+  public boolean toggleDeviceStatus(int devId, String status) {
+    boolean check = false;
+    String newStatus = "";
 
-        if ("Active".equalsIgnoreCase(status)) {
-            newStatus = "Inactive";
-        } else if ("Inactive".equalsIgnoreCase(status)) {
-            newStatus = "Active";
-        } else {
-            return false;
-        }
-        String query = "UPDATE DEVICE SET STATUS = ? WHERE ID = ?";
-        try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, newStatus);
-            stmt.setInt(2, devId);
-
-            if (stmt.executeUpdate() > 0) {
-                check = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check;
+    if ("Active".equalsIgnoreCase(status)) {
+      newStatus = "Inactive";
+    } else if ("Inactive".equalsIgnoreCase(status)) {
+      newStatus = "Active";
+    } else {
+      return false;
     }
+    String query = "UPDATE DEVICE SET STATUS = ? WHERE ID = ?";
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setString(1, newStatus);
+      stmt.setInt(2, devId);
+
+      if (stmt.executeUpdate() > 0) {
+        check = true;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return check;
+  }
 }

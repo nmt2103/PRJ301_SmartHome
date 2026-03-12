@@ -14,6 +14,21 @@ public class HomeDTO {
   public HomeDTO() {
   }
 
+  public HomeDTO(String code, String name, String address, String status) {
+    this.code = code;
+    this.name = name;
+    this.address = address;
+    this.status = status;
+  }
+
+  public HomeDTO(int id, String code, String name, String address, String status) {
+    this.id = id;
+    this.code = code;
+    this.name = name;
+    this.address = address;
+    this.status = status;
+  }
+
   public HomeDTO(int id, String code, String name, String address, String status, Timestamp created_at) {
     this.id = id;
     this.code = code;
