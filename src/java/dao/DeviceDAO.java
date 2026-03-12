@@ -22,7 +22,7 @@ public class DeviceDAO {
                 + "INNER JOIN HOME h ON r.HOME_ID = h.ID "
                 + "WHERE (d.SERIAL_NO LIKE ? OR d.TYPE LIKE ?) "
                 + "AND (? = 0 OR d.ROOM_ID = ?)"
-                + "AND (? = '' OR d.STATUS = ?)";
+                + " AND (? = '' OR d.STATUS = ?)";
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + value + "%");
@@ -48,7 +48,7 @@ public class DeviceDAO {
 
                 int id = rs.getInt("ID");
                 String type = rs.getString("TYPE");
-                String serial = rs.getString("SERIAL");
+                String serial = rs.getString("SERIAL_NO");
                 String vendor = rs.getString("VENDOR");
                 String devStatus = rs.getString("STATUS");
                 Timestamp lastseen = rs.getTimestamp("LAST_SEEN_ST");
