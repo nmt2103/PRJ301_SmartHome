@@ -12,6 +12,29 @@ public class RoomDTO {
   public RoomDTO() {
   }
 
+  public RoomDTO(int id, String name, int floor, String type, String status) {
+    this.id = id;
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
+
+  public RoomDTO(int homeId, int floor, String name, String type, String status) {
+    this.homeId = homeId;
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
+
+  public RoomDTO(String name, int floor, String type, String status) {
+    this.name = name;
+    this.floor = floor;
+    this.type = type;
+    this.status = status;
+  }
+
   public RoomDTO(int id, int homeId, String name, int floor, String type, String status) {
     this.id = id;
     this.homeId = homeId;

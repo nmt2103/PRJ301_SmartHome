@@ -1,4 +1,6 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,12 +17,15 @@
       <label for="password">Password:</label>
       <input type="password" name="password" placeholder="Enter password..." required>
       <br>
-      <input type="submit" value="Login">
+      <input type="submit" name="action" value="Login">
     </form>
 
-    <p>
-      <%=request.getAttribute("ERROR_MSG") != null ? request.getAttribute(
-              "ERROR_MSG") : ""%>
-    </p>
+    <c:if test="${not empty MSG}">
+      <p>${MSG}</p>
+    </c:if>
+    <c:if test="${not empty ERROR_MSG}">
+      <p>${ERROR_MSG}</p>
+    </c:if>
+
   </body>
 </html>

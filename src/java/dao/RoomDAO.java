@@ -66,8 +66,30 @@ public class RoomDAO {
     return searchedList;
   }
 
+  public RoomDTO getRoomById(String id) {
+    RoomDTO room = null;
+    String sql = "SELECT * FROM ROOM WHERE ID=?";
+
+    try ( Connection conn = DBUtils.getConnection();
+             PreparedStatement ptm = conn.prepareStatement(sql)) {
+
+      ptm.setString(1, id);
+      ResultSet rs = ptm.executeQuery();
+      if (rs.next()) {
+        room = new RoomDTO(rs.getInt("ID"), rs.getInt("HOME_ID"),
+                rs.getString("NAME"), rs.getInt("FLOOR"),
+                rs.getString("TYPE"), rs.getString("STATUS"));
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return room;
+  }
+
   public boolean updateRoom(RoomDTO room) {
-    String sql = "UPDATE ROOM SET NAME=?, FLOOR=?, TYPE=?, STATUS=?";
+    String sql = "UPDATE ROOM SET NAME=?, FLOOR=?, TYPE=?, STATUS=? WHERE ID=?";
 
     try ( Connection conn = DBUtils.getConnection();
              PreparedStatement ptm = conn.prepareStatement(sql)) {
@@ -76,6 +98,7 @@ public class RoomDAO {
       ptm.setInt(2, room.getFloor());
       ptm.setString(3, room.getType());
       ptm.setString(4, room.getStatus());
+      ptm.setInt(5, room.getId());
 
       return ptm.executeUpdate() > 0;
     } catch (Exception e) {
@@ -85,13 +108,15 @@ public class RoomDAO {
     return false;
   }
 
-  public boolean deleteRoom(String id) {
+  public boolean deleteRoom(int id) {
     String sql = "DELETE FROM ROOM WHERE ID=?";
 
     try ( Connection conn = DBUtils.getConnection();
              PreparedStatement ptm = conn.prepareStatement(sql)) {
 
-      ptm.setString(1, id);
+      ptm.setInt(1, id);
+
+      return ptm.executeUpdate() > 0;
     } catch (Exception e) {
       e.printStackTrace();
     }
