@@ -12,53 +12,54 @@ import util.DBUtils;
 
 public class DeviceDAO {
 
-  public ArrayList<DeviceDTO> searchDevices(String value, int roomId, String status) {
-    ArrayList<DeviceDTO> list = new ArrayList<>();
-    String query = "SELECT d.ID, d.TYPE, d.SERIAL_NO, d.VENDOR, d.STATUS, d.LAST_SEEN_ST, "
-            + "r.ID AS ROOM_ID, r.NAME AS ROOM_NAME, "
-            + "h.ID AS HOME_ID, h.NAME AS HOME_NAME "
-            + "FROM DEVICE d "
-            + "INNER JOIN ROOM r ON d.ROOM_ID = r.ID "
-            + "INNER JOIN HOME h ON r.HOME_ID = h.ID "
-            + "WHERE (d.SERIAL_NO LIKE ? OR d.TYPE LIKE ?) "
-            + "AND (? = 0 OR d.ROOM_ID = ?)"
-            + "AND (? = '' OR d.STATUS = ?)";
-    try ( Connection conn = DBUtils.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+    public ArrayList<DeviceDTO> searchDevices(String value, int roomId, String status) {
+        ArrayList<DeviceDTO> list = new ArrayList<>();
+        String query = "SELECT d.ID, d.TYPE, d.SERIAL_NO, d.VENDOR, d.STATUS, d.LAST_SEEN_ST, "
+                + "r.ID AS ROOM_ID, r.NAME AS ROOM_NAME, "
+                + "h.ID AS HOME_ID, h.NAME AS HOME_NAME "
+                + "FROM DEVICE d "
+                + "INNER JOIN ROOM r ON d.ROOM_ID = r.ID "
+                + "INNER JOIN HOME h ON r.HOME_ID = h.ID "
+                + "WHERE (d.SERIAL_NO LIKE ? OR d.TYPE LIKE ?) "
+                + "AND (? = 0 OR d.ROOM_ID = ?)"
+                + " AND (? = '' OR d.STATUS = ?)";
+        try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
 
-      stmt.setString(1, "%" + value + "%");
-      stmt.setString(2, "%" + value + "%");
+            stmt.setString(1, "%" + value + "%");
+            stmt.setString(2, "%" + value + "%");
 
-      stmt.setInt(3, roomId);
-      stmt.setInt(4, roomId);
+            stmt.setInt(3, roomId);
+            stmt.setInt(4, roomId);
 
-      stmt.setString(5, status);
-      stmt.setString(6, status);
+            stmt.setString(5, status);
+            stmt.setString(6, status);
 
-      ResultSet rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
-      while (rs.next()) {
-        HomeDTO home = new HomeDTO();
-        home.setId(rs.getInt("HOME_ID"));
-        home.setName(rs.getString("HOME_NAME"));
+            while (rs.next()) {
+                HomeDTO home = new HomeDTO();
+                home.setId(rs.getInt("HOME_ID"));
+                home.setName(rs.getString("HOME_NAME"));
 
-        RoomDTO room = new RoomDTO();
-        room.setId(rs.getInt("ROOM_ID"));
-        room.setName(rs.getString("ROOM_NAME"));
-        room.setHomeId(home.getId());
+                RoomDTO room = new RoomDTO();
+                room.setId(rs.getInt("ROOM_ID"));
+                room.setName(rs.getString("ROOM_NAME"));
+                room.setHomeId(home);
 
-        int id = rs.getInt("ID");
-        String type = rs.getString("TYPE");
-        String serial = rs.getString("SERIAL");
-        String vendor = rs.getString("VENDOR");
-        String devStatus = rs.getString("STATUS");
-        Timestamp lastseen = rs.getTimestamp("LAST_SEEN_ST");
+                int id = rs.getInt("ID");
+                String type = rs.getString("TYPE");
+                String serial = rs.getString("SERIAL_NO");
+                String vendor = rs.getString("VENDOR");
+                String devStatus = rs.getString("STATUS");
+                Timestamp lastseen = rs.getTimestamp("LAST_SEEN_ST");
 
-        DeviceDTO dev = new DeviceDTO(id, type, serial, vendor, devStatus, lastseen, room);
-        list.add(dev);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+                DeviceDTO dev = new DeviceDTO(id, type, serial, vendor, devStatus, lastseen, room);
+                list.add(dev);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
     return list;
   }
