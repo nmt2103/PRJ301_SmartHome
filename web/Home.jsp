@@ -38,9 +38,11 @@
       <p>${ERROR_MSG}</p>
     </c:if>
 
-    <form action="HomeServlet">
-      <input type="submit" name="action" value="Add">
-    </form>
+    <c:if test="${LOGIN_USER.role != 'USER'}">
+      <form action="HomeServlet">
+        <input type="submit" name="action" value="Add">
+      </form>
+    </c:if>
 
     <table border="1" cellpadding="1">
       <thead>
@@ -49,34 +51,42 @@
           <th>Name</th>
           <th>Address</th>
           <th>Status</th>
-          <th>Action</th>
+
+          <c:if test="${LOGIN_USER.role != 'USER'}">
+            <th>Action</th>
+            </c:if>
+
         </tr>
       </thead>
       <tbody>
 
         <c:forEach items="${HOME_LIST}" var="home">
-
           <tr>
             <td>${home.code}</td>
             <td>${home.name}</td>
             <td>${home.address}</td>
             <td>${home.status}</td>
-            <td>
-              <form action="HomeServlet">
-                <input type="submit" name="action" value="Update">
-                <input type="hidden" name="homeId" value="${home.id}">
-              </form>
-              <form action="HomeServlet" method="POST">
-                <input type="submit" name="action" value="Delete">
-                <input type="hidden" name="homeId" value="${home.id}">
-              </form>
-            </td>
-          </tr>
 
+            <c:if test="${LOGIN_USER.role != 'USER'}">
+              <td>
+                <form action="HomeServlet">
+                  <input type="submit" name="action" value="Update">
+                  <input type="hidden" name="homeId" value="${home.id}">
+                </form>
+                <form action="HomeServlet" method="POST">
+                  <input type="submit" name="action" value="Delete">
+                  <input type="hidden" name="homeId" value="${home.id}">
+                </form>
+              </td>
+            </c:if>
+
+          </tr>
         </c:forEach>
 
       </tbody>
     </table>
     <a href="RoomServlet">Room Page</a>
+    <br>
+    <a href="RuleServlet">Rule Page</a>
   </body>
 </html>

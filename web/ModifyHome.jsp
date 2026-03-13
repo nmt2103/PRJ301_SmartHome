@@ -5,7 +5,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Update Home Page</title>
+    <title>${ACTION} Home Page</title>
   </head>
   <body>
     <h1>${ACTION} Home</h1>
