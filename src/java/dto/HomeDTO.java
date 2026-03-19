@@ -9,7 +9,7 @@ public class HomeDTO {
   private String name;
   private String address;
   private String status;
-  private Timestamp created_at;
+  private Timestamp createdAt;
 
   public HomeDTO() {
   }
@@ -35,7 +35,7 @@ public class HomeDTO {
     this.name = name;
     this.address = address;
     this.status = status;
-    this.created_at = created_at;
+    this.createdAt = created_at;
   }
 
   public int getId() {
@@ -78,11 +78,11 @@ public class HomeDTO {
     this.status = status;
   }
 
-  public Timestamp getCreated_at() {
-    return created_at;
+  public Timestamp getCreatedAt() {
+    return createdAt;
   }
 
-  public void setCreated_at(Timestamp created_at) {
-    this.created_at = created_at;
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
   }
 }

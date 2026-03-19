@@ -13,6 +13,12 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
 
+  private static final String LOGIN_PAGE = "Login.jsp";
+  private static final String ADMIN_PAGE = "MainController?action=DashboardAdmin";
+  private static final String OWNER_PAGE = "MainController?action=DashboardOwner";
+  private static final String TECHNICIAN_PAGE = "MainController?action=DashboardTECH";
+  private static final String VIEWER_PAGE = "MainController?action=DashboardViewer";
+
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
    *
@@ -25,28 +31,67 @@ public class LoginServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
 
-    if (request.getMethod().equalsIgnoreCase("GET")) {
-      request.setAttribute("MSG", "Logged out.");
-      request.getRequestDispatcher("Login.jsp").forward(request, response);
+    String url = LOGIN_PAGE;
+    boolean isRedirect = false;
 
-    } else {
+    try {
 
-      String user = request.getParameter("username");
-      String pass = request.getParameter("password");
-
-      UserDAO userDAO = new UserDAO();
-      UserDTO loginUser = userDAO.checkLogin(user, pass);
-
-      if (loginUser != null) {
-        HttpSession session = request.getSession();
-        session.setAttribute("LOGIN_USER", loginUser);
-
-        response.sendRedirect("HomeServlet");
-      } else {
-        request.setAttribute("ERROR_MSG", "Invalid username or password.");
+      if (request.getMethod().equalsIgnoreCase("GET")) {
+        request.setAttribute("MSG", "Logged out.");
         request.getRequestDispatcher("Login.jsp").forward(request, response);
-      }
 
+      } else {
+
+        String user = request.getParameter("username");
+        String pass = request.getParameter("password");
+
+        UserDAO userDAO = new UserDAO();
+        UserDTO loginUser = userDAO.checkLogin(user, pass);
+
+        if (loginUser != null) {
+          HttpSession session = request.getSession();
+          session.setAttribute("LOGIN_USER", loginUser);
+
+          String role = loginUser.getRole();
+          switch (role) {
+            case "Admin":
+              url = ADMIN_PAGE;
+              isRedirect = true;
+              break;
+
+            case "Home Owner":
+              url = OWNER_PAGE;
+              isRedirect = true;
+              break;
+
+            case "Technician":
+              url = TECHNICIAN_PAGE;
+              isRedirect = true;
+              break;
+
+            case "Viewer":
+              url = VIEWER_PAGE;
+              isRedirect = true;
+            default:
+              request.setAttribute("ERROR_MSG", "Invalid user role!");
+              isRedirect = false;
+          }
+        } else {
+          request.setAttribute("ERROR_MSG", "Invalid username or password.");
+          isRedirect = false;
+        }
+
+      }
+    } catch (Exception e) {
+      log("Error at LoginController:" + e.toString());
+      request.setAttribute("ERROR_MSG", "System error while login process.");
+      isRedirect = false;
+    } finally {
+      if (isRedirect) {
+        response.sendRedirect(url);
+      } else {
+        request.getRequestDispatcher(url).forward(request, response);
+      }
     }
   }
 

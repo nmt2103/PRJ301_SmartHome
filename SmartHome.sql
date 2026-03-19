@@ -28,10 +28,10 @@ CREATE TABLE USERS (
 )
 
 INSERT INTO USERS (USERNAME, PASSWORD, FULL_NAME, EMAIL, ROLE, CREATE_AT) VALUES
-(N'admin', '123456', N'Le Van Thanh Nhan', 'Nhan@gmail.com', N'ADMIN', GETDATE()),
-(N'user01', '123456', N'Tran Thi A', 'A@gmail.com', N'USER', GETDATE()),
-(N'user02', '123456', N'Nguyen Van B', 'B@gmail.com', N'USER', GETDATE()),
-(N'manager01', '123456', N'Pham Thi C', 'C@gmail.com', N'MANAGER', GETDATE());
+(N'admin', '123456', N'Le Van Thanh Nhan', 'Nhan@gmail.com', N'Admin', GETDATE()),
+(N'user01', '123456', N'Tran Thi A', 'A@gmail.com', N'Viewer', GETDATE()),
+(N'user02', '123456', N'Nguyen Van B', 'B@gmail.com', N'Home Owner', GETDATE()),
+(N'manager01', '123456', N'Pham Thi C', 'C@gmail.com', N'Techinician', GETDATE());
 
 CREATE TABLE HOMEMODE (
   ID INT PRIMARY KEY NOT NULL IDENTITY(1, 1),

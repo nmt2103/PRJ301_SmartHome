@@ -13,6 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "HomeServlet", urlPatterns = {"/HomeServlet"})
 public class HomeServlet extends HttpServlet {
 
+  private static final String ERROR_PAGE = "Error.jsp";
+  private static final String HOME_PAGE = "Home.jsp";
+  private static final String FORM_PAGE = "ModifyHome.jsp";
+
+  private static final String SEARCH_ACTION = "MainController?action=SearchHome";
+
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
    *
@@ -25,93 +31,113 @@ public class HomeServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
 
-    String action = request.getParameter("action");
-    HomeDAO homeDAO = new HomeDAO();
+    String url = ERROR_PAGE;
+    boolean isRedirect = false;
 
-    if (request.getMethod().equalsIgnoreCase("GET")) {
+    try {
+      String action = request.getParameter("action");
 
-      if (action == null || action.isEmpty()) {
-        List<HomeDTO> homes = homeDAO.getHomes("", "");
+      HomeDAO homeDAO = new HomeDAO();
 
-        request.setAttribute("HOME_LIST", homes);
-        request.getRequestDispatcher("Home.jsp").forward(request, response);
+      if (request.getMethod().equalsIgnoreCase("GET")) {
 
-      } else if (action.equalsIgnoreCase("search")) {
-        String searchName = request.getParameter("searchName");
-        String filterStatus = request.getParameter("filterStatus");
+//        if (action == null || action.isEmpty()) {
+//          List<HomeDTO> homes = homeDAO.getHomes("", "");
+//
+//          request.setAttribute("HOME_LIST", homes);
+//          url = HOME_PAGE;
+//
+//        } else
+        if (action.equals("SearchHome")) {
+          String searchName = request.getParameter("searchName");
+          String filterStatus = request.getParameter("filterStatus");
 
-        List<HomeDTO> homes = homeDAO.getHomes(searchName, filterStatus);
+          List<HomeDTO> homes = homeDAO.getHomes(searchName, filterStatus);
 
-        if (homes == null || homes.isEmpty()) {
-          homes = homeDAO.getHomes("", "");
+          if (homes == null || homes.isEmpty()) {
+            homes = homeDAO.getHomes("", "");
 
-          request.setAttribute("ERROR_MSG", "Home not found! Showing all homes.");
+            request.setAttribute("ERROR_MSG", "Home not found! Showing all homes.");
+          }
+
+          request.setAttribute("HOME_LIST", homes);
+          url = HOME_PAGE;
+
+        } else if (action.equals("FormHome")) {
+          HomeDTO home = null;
+
+          if (!request.getParameter("homeId").isEmpty()) {
+            String homeId = request.getParameter("homeId");
+
+            home = homeDAO.getHomeById(homeId);
+
+            request.setAttribute("HOME", home);
+          }
+
+          request.setAttribute("ACTION", home == null ? "Add" : "Update");
+          url = FORM_PAGE;
+
         }
+      } else {
 
-        request.setAttribute("HOME_LIST", homes);
-        request.getRequestDispatcher("Home.jsp").forward(request, response);
+        if (action.equals("AddHome")) {
+          String code = request.getParameter("code");
+          String name = request.getParameter("name");
+          String address = request.getParameter("address");
+          String status = request.getParameter("status").toUpperCase();
 
-      } else if (action.equalsIgnoreCase("add")) {
-        request.setAttribute("ACTION", action);
-        request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+          HomeDTO addHome = new HomeDTO(code, name, address, status);
+          boolean isSuccess = homeDAO.insertHome(addHome);
+          if (isSuccess) {
+            url = SEARCH_ACTION;
+            isRedirect = true;
+          } else {
+            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+            url = FORM_PAGE;
+            isRedirect = false;
+          }
 
-      } else if (action.equalsIgnoreCase("update")) {
-        String homeId = request.getParameter("homeId");
+        } else if (action.equals("UpdateHome")) {
+          int id = Integer.parseInt(request.getParameter("homeId"));
+          String code = request.getParameter("code");
+          String name = request.getParameter("name");
+          String address = request.getParameter("address");
+          String status = request.getParameter("status").toUpperCase();
 
-        HomeDTO home = homeDAO.getHomeById(homeId);
+          HomeDTO updHome = new HomeDTO(id, code, name, address, status);
+          boolean isSuccess = homeDAO.updateHome(updHome);
+          if (isSuccess) {
+            url = SEARCH_ACTION;
+            isRedirect = true;
+          } else {
+            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+            url = FORM_PAGE;
+            isRedirect = false;
+          }
 
-        request.setAttribute("ACTION", action);
-        request.setAttribute("HOME", home);
-        request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+        } else if (action.equals("DeleteHome")) {
+          int id = Integer.parseInt(request.getParameter("homeId"));
 
+          boolean isSuccess = homeDAO.deleteHome(id);
+          if (isSuccess) {
+            url = SEARCH_ACTION;
+            isRedirect = true;
+          } else {
+            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+            url = FORM_PAGE;
+            isRedirect = false;
+          }
+        }
       }
-    } else {
-
-      if (action.equalsIgnoreCase("add")) {
-        String code = request.getParameter("code");
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String status = request.getParameter("status").toUpperCase();
-
-        HomeDTO addHome = new HomeDTO(code, name, address, status);
-        boolean isSuccess = homeDAO.insertHome(addHome);
-        if (isSuccess) {
-          request.setAttribute("SUCCESS_MSG", "Home added successfully.");
-          response.sendRedirect("HomeServlet");
-        } else {
-          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-          request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
-        }
-
-      } else if (action.equalsIgnoreCase("update")) {
-        int id = Integer.parseInt(request.getParameter("homeId"));
-        String code = request.getParameter("code");
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String status = request.getParameter("status").toUpperCase();
-
-        HomeDTO updHome = new HomeDTO(id, code, name, address, status);
-        boolean isSuccess = homeDAO.updateHome(updHome);
-        if (isSuccess) {
-          request.setAttribute("SUCCESS_MSG", "Home updated successfully.");
-          response.sendRedirect("HomeServlet");
-        } else {
-          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-          request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
-        }
-
-      } else if (action.equalsIgnoreCase("delete")) {
-        int id = Integer.parseInt(request.getParameter("homeId"));
-
-        boolean isSuccess = homeDAO.deleteHome(id);
-        if (isSuccess) {
-          request.setAttribute("SUCCESS_MSG", "Home deleted successfully.");
-          response.sendRedirect("HomeServlet");
-        } else {
-          request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-          request.getRequestDispatcher("Home.jsp").forward(request, response);
-        }
-
+    } catch (Exception e) {
+      log("Error at HomeServlet: " + e.toString());
+      request.setAttribute("ERROR_MSG", "Bussiness error at Home: " + e.toString());
+      isRedirect = false;
+    } finally {
+      if (isRedirect) {
+        response.sendRedirect(url);
+      } else {
+        request.getRequestDispatcher(url).forward(request, response);
       }
     }
   }

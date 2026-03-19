@@ -11,72 +11,97 @@
     <title>Home Page</title>
   </head>
   <body>
-    <form action="LoginServlet">
+    <form action="MainController">
       <input type="submit" name="action" value="Logout">
     </form>
 
     <h1>Homes</h1>
 
-    <form action="HomeServlet">
-      <label for="searchName">Search:</label>
-      <input type="text" name="searchName" placeholder="Enter home name...">
-      <br>
-      <label for="filterStatus">Status:</label>
-      <select id="filterStatus" name="filterStatus">
-        <option value="" selected>Choose a status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
-      <br>
-      <input type="submit" name="action" value="Search">
+    <form action="MainController">
+      <input type="hidden" name="action" value="SearchHome">
+
+      <div>
+        <label for="searchName">Search:</label>
+        <input type="text" name="searchName" value="${param.searchName}" placeholder="Enter home name...">
+      </div>
+
+      <div>
+        <label for="filterStatus">Status:</label>
+        <select id="filterStatus" name="filterStatus">
+          <option value="" selected>Choose a status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div>
+        <input type="submit" value="Search">
+      </div>
     </form>
 
-    <c:if test="${not empty SUCCESS_MSG}">
-      <p>${SUCCESS_MSG}</p>
-    </c:if>
     <c:if test="${not empty ERROR_MSG}">
       <p>${ERROR_MSG}</p>
     </c:if>
 
-    <form action="HomeServlet">
-      <input type="submit" name="action" value="Add">
-    </form>
+    <c:if test="${LOGIN_USER.role != 'USER'}">
+      <form action="MainController">
+        <input type="hidden" name="action" value="FormHome">
+        <input type="submit" value="Add">
+      </form>
+    </c:if>
 
-    <table border="1" cellpadding="1">
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Name</th>
-          <th>Address</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        <c:forEach items="${HOME_LIST}" var="home">
-
+    <c:if test="${not empty HOME_LIST}">
+      <table>
+        <thead>
           <tr>
-            <td>${home.code}</td>
-            <td>${home.name}</td>
-            <td>${home.address}</td>
-            <td>${home.status}</td>
-            <td>
-              <form action="HomeServlet">
-                <input type="submit" name="action" value="Update">
-                <input type="hidden" name="homeId" value="${home.id}">
-              </form>
-              <form action="HomeServlet" method="POST">
-                <input type="submit" name="action" value="Delete">
-                <input type="hidden" name="homeId" value="${home.id}">
-              </form>
-            </td>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Status</th>
+
+            <c:if test="${LOGIN_USER.role != 'USER'}">
+              <th>Action</th>
+              </c:if>
+
           </tr>
+        </thead>
+        <tbody>
 
-        </c:forEach>
+          <c:forEach items="${HOME_LIST}" var="home">
+            <tr>
+              <td>${home.code}</td>
+              <td>${home.name}</td>
+              <td>${home.address}</td>
+              <td>${home.status}</td>
 
-      </tbody>
-    </table>
-    <a href="RoomServlet">Room Page</a>
+              <c:if test="${LOGIN_USER.role != 'USER'}">
+                <td>
+                  <form action="MainController">
+                    <input type="hidden" name="action" value="FormHome">
+                    <input type="hidden" name="homeId" value="${home.id}">
+                    <input type="submit" value="Update">
+                  </form>
+                  <form action="MainController" method="POST">
+                    <input type="hidden" name="action" value="DeleteHome">
+                    <input type="hidden" name="homeId" value="${home.id}">
+                    <input type="submit" value="Delete">
+                  </form>
+                </td>
+              </c:if>
+
+            </tr>
+          </c:forEach>
+
+        </tbody>
+      </table>
+    </c:if>
+
+    <c:if test="${empty HOME_LIST}">
+      <p>No home found!</p>
+    </c:if>
+
+    <a href="MainController?action=SearchRoom">Room Page</a>
+    <br>
+    <a href="MainController?action=SearchRule">Rule Page</a>
   </body>
 </html>

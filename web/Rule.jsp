@@ -1,27 +1,27 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.List"%>
-<%@page import="dto.RoomDTO"%>
-<%@page import="dao.RoomDAO"%>
+<%@page import="dto.RuleDTO"%>
+<%@page import="dao.RuleDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Room Page</title>
+    <title>Rule Page</title>
   </head>
   <body>
-    <h1>Rooms</h1>
+    <h1>Rules</h1>
 
-    <form action="RoomServlet">
+    <form action="RuleServlet">
       <label for="searchName">Search:</label>
-      <input type="text" name="searchName" placeholder="Enter room name...">
+      <input type="text" name="searchName" placeholder="Enter rule name...">
       <br>
-      <label for="filterStatus">Status:</label>
-      <select id="filterStatus" name="filterStatus">
+      <label for="filterType">Type:</label>
+      <select id="filterType" name="filterType">
         <option value="" selected>Choose a status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
+        <option value="">Active</option>
+        <option value="">Inactive</option>
       </select>
       <br>
       <input type="submit" name="action" value="Search">
@@ -35,7 +35,7 @@
     </c:if>
 
     <c:if test="${LOGIN_USER.role != 'USER'}">
-      <form action="RoomServlet">
+      <form action="RuleServlet">
         <input type="submit" name="action" value="Add">
       </form>
     </c:if>
@@ -45,9 +45,8 @@
         <tr>
           <th>Home ID</th>
           <th>Name</th>
-          <th>Floor</th>
           <th>Type</th>
-          <th>Status</th>
+          <th>Priority</th>
 
           <c:if test="${LOGIN_USER.role != 'USER'}">
             <th>Action</th>
@@ -57,23 +56,22 @@
       </thead>
       <tbody>
 
-        <c:forEach items="${ROOM_LIST}" var="room">
+        <c:forEach items="${RULE_LIST}" var="rule">
           <tr>
-            <td>${room.homeId}</td>
-            <td>${room.name}</td>
-            <td>${room.floor}</td>
-            <td>${room.type}</td>
-            <td>${room.status}</td>
+            <td>${rule.homeId}</td>
+            <td>${rule.name}</td>
+            <td>${rule.triggerType}</td>
+            <td>${rule.priority}</td>
 
             <c:if test="${LOGIN_USER.role != 'USER'}">
               <td>
-                <form action="RoomServlet">
+                <form action="RuleServlet">
                   <input type="submit" name="action" value="Update">
-                  <input type="hidden" name="roomId" value="${room.id}">
+                  <input type="hidden" name="ruleId" value="${rule.id}">
                 </form>
-                <form action="RoomServlet" method="POST">
+                <form action="RuleServlet" method="POST">
                   <input type="submit" name="action" value="Delete">
-                  <input type="hidden" name="roomId" value="${room.id}">
+                  <input type="hidden" name="ruleId" value="${rule.id}">
                 </form>
               </td>
             </c:if>

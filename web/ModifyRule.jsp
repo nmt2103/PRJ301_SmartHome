@@ -5,15 +5,15 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${ACTION} Room Page</title>
+    <title>${ACTION} Rule Page</title>
   </head>
   <body>
-    <h1>${ACTION} Room</h1>
-    <form action="RoomServlet" method="POST">
+    <h1>${ACTION} Rule</h1>
+    <form action="RuleServlet" method="POST">
 
       <c:if test="${ACTION == 'Update'}">
-        <label for="roomId">Room ID:</label>
-        <input type="text" name="roomId" value="${ROOM.id}" readonly>
+        <label for="ruleId">Rule ID:</label>
+        <input type="text" name="ruleId" value="${RULE.id}" readonly>
         <br>
       </c:if>
 
@@ -31,18 +31,18 @@
       </c:if>
 
       <label for="name">Name:</label>
-      <input type="text" name="name" value="${ROOM.name}" required>
-      <br>
-      <label for="floor">Floor:</label>
-      <input type="number" name="floor" value="${ROOM.floor}" required>
+      <input type="text" name="name" value="${RULE.name}" required>
       <br>
       <label for="type">Type:</label>
-      <input type="text" name="type" value="${ROOM.type}" required>
+      <input type="text" name="type" value="${RULE.triggerType}" required>
       <br>
-      <label for="status">Status</label>
-      <select id="status" name="status">
-        <option value="active" ${ROOM.status == 'active' ? 'selected' : ''}>Active</option>
-        <option value="inactive" ${ROOM.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+      <label for="priority">Priority:</label>
+      <input type="number" name="priority" value="${RULE.priority}" required>
+      <br>
+      <label for="active">Active:</label>
+      <select id="active" name="active">
+        <option value="1" ${RULE.active == 1 ? 'selected' : ''}>Active</option>
+        <option value="0" ${RULE.active == 0 ? 'selected' : ''}>Inactive</option>
       </select>
       <br>
       <input type="submit" name="action" value="${ACTION}">
@@ -52,6 +52,6 @@
       <p>${ERROR_MSG}</p>
     </c:if>
 
-    <a href="RoomServlet">Go back</a>
+    <a href="RuleServlet">Go back</a>
   </body>
 </html>
