@@ -9,34 +9,48 @@
   </head>
   <body>
     <h1>${ACTION} Home</h1>
-    <form action="HomeServlet" method="POST">
+    <form action="MainController" method="POST">
+      <input type="hidden" name="action" value="${ACTION}Home">
+
       <c:if test="${ACTION == 'Update'}">
-        <label for="homeId">Home ID:</label>
-        <input type="text" name="homeId" value="${HOME.id}" readonly>
-        <br>
+        <div>
+          <label for="homeId">Home ID:</label>
+          <input type="text" name="homeId" value="${HOME.id}" readonly>
+        </div>
       </c:if>
-      <label for="code">Code:</label>
-      <input type="text" name="code" value="${HOME.code}" required>
-      <br>
-      <label for="name">Name:</label>
-      <input type="text" name="name" value="${HOME.name}" required>
-      <br>
-      <label for="address">Address:</label>
-      <input type="text" name="address" value="${HOME.address}" required>
-      <br>
-      <label for="status">Status</label>
-      <select id="status" name="status">
-        <option value="active" ${HOME.status == 'active' ? 'selected' : ''}>Active</option>
-        <option value="inactive" ${HOME.status == 'inactive' ? 'selected' : ''}>Inactive</option>
-      </select>
-      <br>
-      <input type="submit" name="action" value="${ACTION}">
+
+      <div>
+        <label for="code">Code:</label>
+        <input type="text" name="code" value="${HOME.code}" required>
+      </div>
+
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" name="name" value="${HOME.name}" required>
+      </div>
+
+      <div>
+        <label for="address">Address:</label>
+        <input type="text" name="address" value="${HOME.address}" required>
+      </div>
+
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="active" ${HOME.status == 'active' ? 'selected' : ''}>Active</option>
+          <option value="inactive" ${HOME.status == 'inactive' ? 'selected' : ''}>Inactive</option>
+        </select>
+      </div>
+
+      <div>
+        <input type="submit" value="${ACTION}">
+      </div>
     </form>
 
     <c:if test="${not empty ERROR_MSG}">
       <p>${ERROR_MSG}</p>
     </c:if>
 
-    <a href="HomeServlet">Go back</a>
+    <a href="MainController?action=SearchHome"><button>Cancel</button></a>
   </body>
 </html>

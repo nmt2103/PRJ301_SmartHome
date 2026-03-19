@@ -112,7 +112,7 @@
     <div class="login-container">
       <h1>Login</h1>
 
-      <form action="LoginServlet" method="POST">
+      <form action="MainController" method="POST">
         <div class="form-group">
           <label for="username">Username:</label>
           <input type="text" name="username" id="username" placeholder="Enter username..." required>
