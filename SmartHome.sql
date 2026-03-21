@@ -66,6 +66,14 @@ INSERT INTO ROOM(NAME, FLOOR, TYPE, STATUS, HOME_ID) VALUES
 ('Phong Khach', 0, 'Living Room', 'Dang Hoat Dong', 2), 
 ('Phong An', 0, 'Kitchen', 'Ngung Hoat Dong', 4);
 
+UPDATE ROOM
+SET STATUS = 'Active'
+WHERE STATUS = N'Dang Hoat Dong';
+
+UPDATE ROOM
+SET STATUS = 'Inactive'
+WHERE STATUS = 'Ngung Hoat Dong';
+
 CREATE TABLE DEVICE (
   ID INT PRIMARY KEY NOT NULL IDENTITY(1, 1),
   TYPE NVARCHAR(50),

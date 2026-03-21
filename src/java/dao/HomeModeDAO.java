@@ -20,15 +20,15 @@ public class HomeModeDAO {
 
     public ArrayList<HomeModeDTO> searchHomeMode(String value, int homeId, String status) {
         ArrayList<HomeModeDTO> list = new ArrayList<>();
-        String query = "SELECT m.ID, m.NAME, m.ACTIVE_FROM, m.ACTIVE_TO, m.IS_ACTIVE, m.HOME_ID, h.NAME AS HOME_NAME"
-                + "FROM HOMEMODE m"
-                + "INNER JOIN HOME h ON m.HOME_ID = h.ID"
-                + "WHERE m.NAME LIKE ?"
-                + "AND (? = 0 OR m.HOME_ID = ?)";
+        String query = "SELECT m.ID, m.NAME, m.ACTIVE_FROM, m.ACTIVE_TO, m.IS_ACTIVE, m.HOME_ID, h.NAME AS HOME_NAME "
+                + "FROM HOMEMODE m "
+                + "INNER JOIN HOME h ON m.HOME_ID = h.ID "
+                + "WHERE m.NAME LIKE ? "
+                + "AND (? = 0 OR m.HOME_ID = ?) ";
         if ("1".equalsIgnoreCase(status)) {
-            query += "AND m.IS_ACTIVE = 1";
+            query += " AND m.IS_ACTIVE = 1";
         } else if ("0".equalsIgnoreCase(status)) {
-            query += "AND m.IS_ACTIVE = 0";
+            query += " AND m.IS_ACTIVE = 0";
         }
 
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {

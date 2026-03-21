@@ -8,7 +8,7 @@
 
     boolean isEdit = (mode != null);
     String actionType = isEdit ? "update" : "insert";
-    String pageTitle = isEdit ? "Update Home Mode" : "Add New Home Mode";
+    String pageTitle = isEdit ? "Edit Home Mode" : "Add New Home Mode";
 
     int modeId = isEdit ? mode.getId() : 0;
     String name = isEdit ? mode.getName() : "";
@@ -61,7 +61,7 @@
                 color: white;
                 padding: 10px 15px;
                 border: none;
-                border-radius: 4px;
+                border-radius: 5px;
                 cursor: pointer;
                 width: 100%;
                 font-size: 16px;
@@ -71,20 +71,26 @@
                 background-color: #5a32a3;
             }
             .btn-cancel {
+                background-color: #E76F51;
                 display: block;
+                padding: 9px 0px;
                 text-align: center;
-                margin-top: 10px;
-                color: #dc3545;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                margin-top: 5px;
+                color: white;
+                width: 100%;
                 text-decoration: none;
             }
         </style>
     </head>
     <body>
-
+        <%@ include file="Menu.jsp" %>
         <div class="form-container">
             <h2><%= pageTitle%></h2>
 
-            <form action="homeModeController" method="POST">
+            <form action="HomeModeServlet" method="POST">
                 <input type="hidden" name="action" value="<%= actionType%>">
                 <input type="hidden" name="id" value="<%= modeId%>">
 
@@ -131,7 +137,7 @@
                 </div>
 
                 <button type="submit" class="btn-submit">Save Mode</button>
-                <a href="homeModeController?action=search" class="btn-cancel">Cancel / Go Back</a>
+                <a href="HomeModeServlet?action=search" class="btn-cancel">Cancel / Go Back</a>
             </form>
         </div>
 
