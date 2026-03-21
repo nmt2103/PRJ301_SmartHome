@@ -3,14 +3,17 @@
 <%@page import="dto.RoomDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    // Lấy dữ liệu từ Controller gửi sang bằng code Java thuần
-    List<DeviceDTO> deviceList = (List<DeviceDTO>) request.getAttribute("DEVICE_LIST");
-    List<RoomDTO> roomList = (List<RoomDTO>) request.getAttribute("ROOM_LIST");
+  // Lấy dữ liệu từ Controller gửi sang bằng code Java thuần
+  List<DeviceDTO> deviceList = (List<DeviceDTO>) request.getAttribute("DEVICE_LIST");
+  List<RoomDTO> roomList = (List<RoomDTO>) request.getAttribute("ROOM_LIST");
 
-    // Giữ lại các giá trị đang tìm kiếm để hiển thị lên form
-    String paramKeyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
-    String paramRoomId = request.getParameter("roomId") != null ? request.getParameter("roomId") : "0";
-    String paramStatus = request.getParameter("status") != null ? request.getParameter("status") : "";
+  // Giữ lại các giá trị đang tìm kiếm để hiển thị lên form
+  String paramKeyword = request.getParameter("keyword") != null ? request.getParameter(
+          "keyword") : "";
+  String paramRoomId = request.getParameter("roomId") != null ? request.getParameter(
+          "roomId") : "0";
+  String paramStatus = request.getParameter("status") != null ? request.getParameter(
+          "status") : "";
 %>
 <!DOCTYPE html>
 <html>
@@ -150,8 +153,8 @@
             <form action="DeviceServlet" method="GET">
                 <input type="hidden" name="action" value="search">
 
-                <label>Search:</label>
-                <input type="text" name="keyword" value="<%= paramKeyword%>" placeholder="Name, serial...">
+        <label>Search:</label>
+        <input type="text" name="keyword" value="<%= paramKeyword%>" placeholder="Name, serial...">
 
                 <label>Room:</label>
                 <select name="roomId">
@@ -177,9 +180,9 @@
                     <option value="Inactive" ${param.status == 'Inactive' ? 'selected' : ''}>Inactive</option>
                 </select>
 
-                <button type="submit" class="btn btn-active">Filter</button>
-            </form>
-        </div>
+        <button type="submit" class="btn btn-active">Filter</button>
+      </form>
+    </div>
 
         <table>
             <thead>
@@ -216,7 +219,7 @@
                         </a>
                     </td>
 
-                    <td><%= device.getLastSeen()%></td>
+          <td><%= device.getLastSeen()%></td>
 
                     <td>
                         <a href="DeviceServlet?action=edit&id=<%= device.getId()%>" class="btn btn-edit">Edit</a>
@@ -235,5 +238,5 @@
             </tbody>
         </table>
 
-    </body>
+  </body>
 </html>

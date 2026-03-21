@@ -13,147 +13,165 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "HomeServlet", urlPatterns = {"/HomeServlet"})
 public class HomeServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+  private static final String ERROR_PAGE = "Error.jsp";
+  private static final String HOME_PAGE = "Home.jsp";
+  private static final String FORM_PAGE = "ModifyHome.jsp";
 
-        String action = request.getParameter("action");
-        HomeDAO homeDAO = new HomeDAO();
+  private static final String SEARCH_ACTION = "MainController?action=SearchHome";
 
-        if (request.getMethod().equalsIgnoreCase("GET")) {
+  /**
+   * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+   *
+   * @param request servlet request
+   * @param response servlet response
+   * @throws ServletException if a servlet-specific error occurs
+   * @throws IOException if an I/O error occurs
+   */
+  protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
 
-            if (action == null || action.isEmpty()) {
-                List<HomeDTO> homes = homeDAO.getHomes("", "");
+    String url = ERROR_PAGE;
+    boolean isRedirect = false;
 
-                request.setAttribute("HOME_LIST", homes);
-                request.getRequestDispatcher("Home.jsp").forward(request, response);
+    try {
+      String action = request.getParameter("action");
 
-            } else if (action.equalsIgnoreCase("search")) {
-                String searchName = request.getParameter("searchName");
-                String filterStatus = request.getParameter("filterStatus");
+      HomeDAO homeDAO = new HomeDAO();
 
-                List<HomeDTO> homes = homeDAO.getHomes(searchName, filterStatus);
+      if (request.getMethod().equalsIgnoreCase("GET")) {
 
-                if (homes == null || homes.isEmpty()) {
-                    homes = homeDAO.getHomes("", "");
+        if (action.equals("SearchHome")) {
+          String searchName = request.getParameter("searchName");
+          String filterStatus = request.getParameter("filterStatus");
 
-                    request.setAttribute("ERROR_MSG", "Home not found! Showing all homes.");
-                }
+          List<HomeDTO> homes = homeDAO.getHomes(searchName, filterStatus);
 
-                request.setAttribute("HOME_LIST", homes);
-                request.getRequestDispatcher("Home.jsp").forward(request, response);
+          if (homes == null || homes.isEmpty()) {
+            homes = homeDAO.getHomes("", "");
 
-            } else if (action.equalsIgnoreCase("add")) {
-                request.setAttribute("ACTION", action);
-                request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+            request.setAttribute("ERROR_MSG", "Home not found! Showing all homes.");
+          }
 
-            } else if (action.equalsIgnoreCase("update")) {
-                String homeId = request.getParameter("homeId");
+          request.setAttribute("HOME_LIST", homes);
+          url = HOME_PAGE;
 
-                HomeDTO home = homeDAO.getHomeById(homeId);
+        } else if (action.equals("FormHome")) {
+          HomeDTO home = null;
 
-                request.setAttribute("ACTION", action);
-                request.setAttribute("HOME", home);
-                request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
+          if (!request.getParameter("homeId").isEmpty()) {
+            String homeId = request.getParameter("homeId");
 
-            }
-        } else {
+            home = homeDAO.getHomeById(homeId);
 
-            if (action.equalsIgnoreCase("add")) {
-                String code = request.getParameter("code");
-                String name = request.getParameter("name");
-                String address = request.getParameter("address");
-                String status = request.getParameter("status").toUpperCase();
+            request.setAttribute("HOME", home);
+          }
 
-                HomeDTO addHome = new HomeDTO(code, name, address, status);
-                boolean isSuccess = homeDAO.insertHome(addHome);
-                if (isSuccess) {
-                    request.setAttribute("SUCCESS_MSG", "Home added successfully.");
-                    response.sendRedirect("HomeServlet");
-                } else {
-                    request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-                    request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
-                }
+          request.setAttribute("ACTION", home == null ? "Add" : "Update");
+          url = FORM_PAGE;
 
-            } else if (action.equalsIgnoreCase("update")) {
-                int id = Integer.parseInt(request.getParameter("homeId"));
-                String code = request.getParameter("code");
-                String name = request.getParameter("name");
-                String address = request.getParameter("address");
-                String status = request.getParameter("status").toUpperCase();
-
-                HomeDTO updHome = new HomeDTO(id, code, name, address, status);
-                boolean isSuccess = homeDAO.updateHome(updHome);
-                if (isSuccess) {
-                    request.setAttribute("SUCCESS_MSG", "Home updated successfully.");
-                    response.sendRedirect("HomeServlet");
-                } else {
-                    request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-                    request.getRequestDispatcher("ModifyHome.jsp").forward(request, response);
-                }
-
-            } else if (action.equalsIgnoreCase("delete")) {
-                int id = Integer.parseInt(request.getParameter("homeId"));
-
-                boolean isSuccess = homeDAO.deleteHome(id);
-                if (isSuccess) {
-                    request.setAttribute("SUCCESS_MSG", "Home deleted successfully.");
-                    response.sendRedirect("HomeServlet");
-                } else {
-                    request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-                    request.getRequestDispatcher("Home.jsp").forward(request, response);
-                }
-
-            }
         }
+      } else {
+
+        if (action.equals("AddHome")) {
+          String code = request.getParameter("code");
+          String name = request.getParameter("name");
+          String address = request.getParameter("address");
+          String status = request.getParameter("status").toUpperCase();
+
+          HomeDTO addHome = new HomeDTO(code, name, address, status);
+          boolean isSuccess = homeDAO.insertHome(addHome);
+          if (isSuccess) {
+            url = SEARCH_ACTION;
+            isRedirect = true;
+          } else {
+            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+            url = FORM_PAGE;
+            isRedirect = false;
+          }
+
+        } else if (action.equals("UpdateHome")) {
+          int id = Integer.parseInt(request.getParameter("homeId"));
+          String code = request.getParameter("code");
+          String name = request.getParameter("name");
+          String address = request.getParameter("address");
+          String status = request.getParameter("status").toUpperCase();
+
+          HomeDTO updHome = new HomeDTO(id, code, name, address, status);
+          boolean isSuccess = homeDAO.updateHome(updHome);
+          if (isSuccess) {
+            url = SEARCH_ACTION;
+            isRedirect = true;
+          } else {
+            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+            url = FORM_PAGE;
+            isRedirect = false;
+          }
+
+        } else if (action.equals("DeleteHome")) {
+          int id = Integer.parseInt(request.getParameter("homeId"));
+
+          boolean isSuccess = homeDAO.deleteHome(id);
+          if (isSuccess) {
+            url = SEARCH_ACTION;
+            isRedirect = true;
+          } else {
+            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
+            url = FORM_PAGE;
+            isRedirect = false;
+          }
+        }
+      }
+    } catch (Exception e) {
+      log("Error at HomeServlet: " + e.toString());
+      request.setAttribute("ERROR_MSG", "Bussiness error at Home: " + e.toString());
+      isRedirect = false;
+    } finally {
+      if (isRedirect) {
+        response.sendRedirect(url);
+      } else {
+        request.getRequestDispatcher(url).forward(request, response);
+      }
     }
+  }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+  /**
+   * Handles the HTTP <code>GET</code> method.
+   *
+   * @param request servlet request
+   * @param response servlet response
+   * @throws ServletException if a servlet-specific error occurs
+   * @throws IOException if an I/O error occurs
+   */
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException {
+    processRequest(request, response);
+  }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+  /**
+   * Handles the HTTP <code>POST</code> method.
+   *
+   * @param request servlet request
+   * @param response servlet response
+   * @throws ServletException if a servlet-specific error occurs
+   * @throws IOException if an I/O error occurs
+   */
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException {
+    processRequest(request, response);
+  }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+  /**
+   * Returns a short description of the servlet.
+   *
+   * @return a String containing servlet description
+   */
+  @Override
+  public String getServletInfo() {
+    return "Short description";
+  }// </editor-fold>
 
 }
