@@ -41,7 +41,7 @@ public class RoomDAO {
       parameters.add("%" + name + "%");
     }
 
-    if (status != null & !status.trim().isEmpty()) {
+    if (status != null && !status.trim().isEmpty()) {
       sql.append(" AND STATUS = ?");
       parameters.add(status);
     }

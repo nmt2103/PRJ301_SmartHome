@@ -41,13 +41,6 @@ public class HomeServlet extends HttpServlet {
 
       if (request.getMethod().equalsIgnoreCase("GET")) {
 
-//        if (action == null || action.isEmpty()) {
-//          List<HomeDTO> homes = homeDAO.getHomes("", "");
-//
-//          request.setAttribute("HOME_LIST", homes);
-//          url = HOME_PAGE;
-//
-//        } else
         if (action.equals("SearchHome")) {
           String searchName = request.getParameter("searchName");
           String filterStatus = request.getParameter("filterStatus");

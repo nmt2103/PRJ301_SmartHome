@@ -18,66 +18,138 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Home Mode Management - Smart Home</title>
         <style>
+            /* Import font Nunito cho đồng bộ với Menu */
+            @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Nunito', sans-serif;
+                background-color: #FAF7F2; /* Nền trang màu kem sáng ấm áp */
+                color: #4A3324; /* Chữ màu nâu sẫm */
                 padding: 20px;
             }
-            .filter-box {
-                background: #f9f9f9;
-                padding: 15px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
+
+            h2 {
+                color: #6C4F3D;
+                font-weight: 700;
                 margin-bottom: 20px;
+                align-items: center;
             }
+
+            /* Định dạng Box Lọc (Filter) */
+            .filter-box {
+                background: #FFFFFF;
+                padding: 15px 20px;
+                border: 1px solid #E6D5B8; /* Viền màu Latte */
+                border-radius: 12px; /* Bo góc mềm mại */
+                margin-bottom: 20px;
+                box-shadow: 0 4px 12px rgba(139, 69, 19, 0.05);
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .filter-box input, .filter-box select {
+                padding: 8px 12px;
+                border: 1px solid #D4A373;
+                border-radius: 8px;
+                font-family: 'Nunito', sans-serif;
+                color: #4A3324;
+                outline: none;
+            }
+
+            /* Định dạng Bảng (Table) */
             table {
                 width: 100%;
-                border-collapse: collapse;
-                margin-top: 10px;
+                border-collapse: separate;
+                border-spacing: 0;
+                background-color: #FFFFFF;
+                border-radius: 12px; /* Bo góc toàn bộ bảng */
+                overflow: hidden; /* Giữ cho góc bo không bị trào ra */
+                box-shadow: 0 4px 12px rgba(139, 69, 19, 0.05);
             }
+
             th, td {
-                border: 1px solid #ddd;
-                padding: 10px;
+                padding: 14px 15px;
                 text-align: left;
+                border-bottom: 1px solid #F0E6D2;
             }
+
             th {
-                background-color: #6f42c1;
+                background-color: #D4A373; /* Tiêu đề bảng màu Caramel */
                 color: white;
-            } /* Đổi màu tím cho khác với Device */
+                font-weight: 600;
+                letter-spacing: 0.5px;
+            }
+
+            tbody tr:hover {
+                background-color: #FDFBF7; /* Highlight nền kem nhẹ khi rẽ chuột */
+            }
+
+            tbody tr:last-child td {
+                border-bottom: none; /* Xóa viền dòng cuối cùng cho đẹp */
+            }
+
+            /* Định dạng Nút Bấm (Buttons) */
             .btn {
-                padding: 6px 12px;
+                padding: 8px 16px;
                 text-decoration: none;
-                border-radius: 4px;
+                border-radius: 8px; /* Bo tròn viên thuốc */
                 color: white;
                 border: none;
                 cursor: pointer;
-            }
-            .btn-add {
-                background-color: #28a745;
-                margin-bottom: 10px;
+                font-weight: 600;
+                font-family: 'Nunito', sans-serif;
+                transition: all 0.2s ease;
                 display: inline-block;
             }
+
+            .btn:hover {
+                transform: translateY(-2px); /* Hiệu ứng nảy nhẹ */
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+            /* Bảng màu Cozy cho từng loại nút */
+            .btn-add {
+                background-color: #82A284;
+                margin-bottom: 15px;
+            } /* Xanh Sage Green */
+            .btn-add:hover {
+                background-color: #6C8C6E;
+            }
+
             .btn-edit {
-                background-color: #ffc107;
-                color: black;
+                background-color: #E9C46A;
+                color: #4A3324;
+            } /* Vàng Mustard */
+            .btn-edit:hover {
+                background-color: #D4B055;
             }
+
             .btn-delete {
-                background-color: #dc3545;
+                background-color: #E76F51;
+            } /* Đỏ Terracotta */
+            .btn-delete:hover {
+                background-color: #D05D43;
             }
+
             .btn-active {
-                background-color: #28a745;
-            }
+                background-color: #82A284;
+            } /* Xanh Sage */
             .btn-inactive {
-                background-color: #6c757d;
-            }
+                background-color: #A9927D;
+            } /* Nâu xám nhẹ */
         </style>
     </head>
     <body>
-
-        <h2>Home Mode Management</h2>
-
-        <a href="homeModeController?action=create" class="btn btn-add">+ Add New Mode</a>
+        <%@ include file="Menu.jsp" %>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="color: #6C4F3D; font-weight: 800; margin: 0;">
+                Home Mode Management
+            </h2>
+            <a href="HomeModeServlet?action=create" class="btn btn-add">+ Add New Mode</a>
+        </div>
         <div class="filter-box">
-            <form action="homeModeController" method="GET">
+            <form action="HomeModeServlet" method="GET">
                 <input type="hidden" name="action" value="search">
 
                 <label>Search:</label>
@@ -134,7 +206,7 @@
                     <td><%= mode.getHomeId().getName()%></td>
 
                     <td>
-                        <a href="homeModeController?action=toggle&id=<%= mode.getId()%>&currentStatus=<%= mode.isIs_act()%>">
+                        <a href="HomeModeServlet?action=toggle&id=<%= mode.getId()%>&currentStatus=<%= mode.isIs_act()%>">
                             <% if (mode.isIs_act()) { %>
                             <span class="btn btn-active">Active</span>
                             <% } else { %>
@@ -144,8 +216,8 @@
                     </td>
 
                     <td>
-                        <a href="homeModeController?action=edit&id=<%= mode.getId()%>" class="btn btn-edit">Edit</a>
-                        <a href="homeModeController?action=delete&id=<%= mode.getId()%>" class="btn btn-delete" 
+                        <a href="HomeModeServlet?action=edit&id=<%= mode.getId()%>" class="btn btn-edit">Edit</a>
+                        <a href="HomeModeSetvlet?action=delete&id=<%= mode.getId()%>" class="btn btn-delete" 
                            onclick="return confirm('Are you sure you want to delete this mode permanently?');">Delete</a>
                     </td>
                 </tr>
