@@ -129,7 +129,7 @@
         <div class="msg-box success-msg">${MSG}</div>
       </c:if>
       <c:if test="${not empty ERROR_MSG}">
-        <div class="msg-box errxor-msg">${ERROR_MSG}</div>
+        <div class="msg-box error-msg">${ERROR_MSG}</div>
       </c:if>
 
     </div>
