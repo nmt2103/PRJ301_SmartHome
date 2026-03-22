@@ -59,7 +59,7 @@ public class HomeServlet extends HttpServlet {
         } else if (action.equals("FormHome")) {
           HomeDTO home = null;
 
-          if (!request.getParameter("homeId").isEmpty()) {
+          if (request.getParameter("homeId") != null) {
             String homeId = request.getParameter("homeId");
 
             home = homeDAO.getHomeById(homeId);
@@ -77,7 +77,7 @@ public class HomeServlet extends HttpServlet {
           String code = request.getParameter("code");
           String name = request.getParameter("name");
           String address = request.getParameter("address");
-          String status = request.getParameter("status").toUpperCase();
+          boolean status = Boolean.parseBoolean(request.getParameter("status"));
 
           HomeDTO addHome = new HomeDTO(code, name, address, status);
           boolean isSuccess = homeDAO.insertHome(addHome);
@@ -95,7 +95,7 @@ public class HomeServlet extends HttpServlet {
           String code = request.getParameter("code");
           String name = request.getParameter("name");
           String address = request.getParameter("address");
-          String status = request.getParameter("status").toUpperCase();
+          boolean status = Boolean.parseBoolean(request.getParameter("status"));
 
           HomeDTO updHome = new HomeDTO(id, code, name, address, status);
           boolean isSuccess = homeDAO.updateHome(updHome);
@@ -117,7 +117,7 @@ public class HomeServlet extends HttpServlet {
             isRedirect = true;
           } else {
             request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-            url = FORM_PAGE;
+            url = HOME_PAGE;
             isRedirect = false;
           }
         }

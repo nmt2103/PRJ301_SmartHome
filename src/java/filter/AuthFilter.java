@@ -19,11 +19,6 @@ import javax.servlet.http.HttpSession;
 public class AuthFilter implements Filter {
 
   private static final boolean debug = true;
-  private static final String[] ALLOWED_PATHS = {
-    "Login.jsp",
-    "MainController?action=Login",
-    ".css", ".js", ".png", ".jpg"
-  };
 
   // The filter configuration object we are associated with.  If
   // this value is null, this filter instance is not currently
@@ -103,30 +98,20 @@ public class AuthFilter implements Filter {
     HttpServletResponse res = (HttpServletResponse) response;
 
     String uri = req.getRequestURI();
-    String action = req.getParameter("action");
-
-    boolean isAllowed = false;
-    for (String path : ALLOWED_PATHS) {
-      if (uri.contains(path) || (action != null && action.equals("Login"))) {
-        isAllowed = true;
-        break;
+    String[] publicPages = {"Login.jsp", "MainController"};
+    for (String page : publicPages) {
+      if (uri.contains(page)) {
+        chain.doFilter(request, response);
+        return;
       }
     }
 
-    if (isAllowed) {
-      chain.doFilter(request, response);
-      return;
-    }
-
     HttpSession session = req.getSession(false);
-    boolean isLoggedIn = (session != null && session.getAttribute("LOGIN_USER") != null);
-
-    if (isLoggedIn) {
-      chain.doFilter(request, response);
-    } else {
-      res.sendRedirect(req.getContextPath() + "/Login.jsp");
+    if (session == null || session.getAttribute("LOGIN_USER") == null) {
+      res.sendRedirect("Login.jsp");
       return;
     }
+    chain.doFilter(request, response);
   }
 
   /**

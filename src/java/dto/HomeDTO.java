@@ -8,20 +8,20 @@ public class HomeDTO {
   private String code;
   private String name;
   private String address;
-  private String status;
+  private boolean status;
   private Timestamp createdAt;
 
   public HomeDTO() {
   }
 
-  public HomeDTO(String code, String name, String address, String status) {
+  public HomeDTO(String code, String name, String address, boolean status) {
     this.code = code;
     this.name = name;
     this.address = address;
     this.status = status;
   }
 
-  public HomeDTO(int id, String code, String name, String address, String status) {
+  public HomeDTO(int id, String code, String name, String address, boolean status) {
     this.id = id;
     this.code = code;
     this.name = name;
@@ -29,7 +29,7 @@ public class HomeDTO {
     this.status = status;
   }
 
-  public HomeDTO(int id, String code, String name, String address, String status, Timestamp created_at) {
+  public HomeDTO(int id, String code, String name, String address, boolean status, Timestamp created_at) {
     this.id = id;
     this.code = code;
     this.name = name;
@@ -70,11 +70,11 @@ public class HomeDTO {
     this.address = address;
   }
 
-  public String getStatus() {
+  public boolean isStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(boolean status) {
     this.status = status;
   }
 
