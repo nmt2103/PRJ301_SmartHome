@@ -19,7 +19,7 @@ public class HomeDAO {
       ptm.setString(1, home.getCode());
       ptm.setString(2, home.getName());
       ptm.setString(3, home.getAddress());
-      ptm.setString(4, home.getStatus());
+      ptm.setBoolean(4, home.isStatus());
 
       return ptm.executeUpdate() > 0;
     } catch (Exception e) {
@@ -56,7 +56,7 @@ public class HomeDAO {
         searchedList.add(new HomeDTO(
                 rs.getInt("ID"), rs.getString("CODE"),
                 rs.getString("NAME"), rs.getString("ADDRESS"),
-                rs.getString("STATUS"), rs.getTimestamp("CREATE_AT")));
+                rs.getBoolean("STATUS"), rs.getTimestamp("CREATE_AT")));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -77,7 +77,7 @@ public class HomeDAO {
       if (rs.next()) {
         home = new HomeDTO(rs.getInt("ID"), rs.getString("CODE"),
                 rs.getString("NAME"), rs.getString("ADDRESS"),
-                rs.getString("STATUS"), rs.getTimestamp("CREATE_AT"));
+                rs.getBoolean("STATUS"), rs.getTimestamp("CREATE_AT"));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -95,7 +95,7 @@ public class HomeDAO {
       ptm.setString(1, home.getCode());
       ptm.setString(2, home.getName());
       ptm.setString(3, home.getAddress());
-      ptm.setString(4, home.getStatus());
+      ptm.setBoolean(4, home.isStatus());
       ptm.setInt(5, home.getId());
 
       return ptm.executeUpdate() > 0;

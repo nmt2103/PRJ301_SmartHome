@@ -70,6 +70,7 @@ public class MainController extends HttpServlet {
           case "DeleteRule":
           case "FormRule":
             url = RULE_SERVLET;
+            break;
 
           default:
             request.setAttribute("ERROR_MSG", "Invalid action.");
