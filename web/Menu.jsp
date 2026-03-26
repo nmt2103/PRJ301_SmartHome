@@ -150,6 +150,7 @@
       <li class="nav-item"><a href="MainController?action=SearchRoom" class="nav-link"><i class="fas fa-couch"></i> Quản lý Phòng</a></li>
       <li class="nav-item"><a href="MainController?action=SearchDevice" class="nav-link"><i class="fas fa-lightbulb"></i> Quản lý Thiết bị</a></li>
       <li class="nav-item"><a href="MainController?action=SearchHomeMode" class="nav-link"><i class="fas fa-moon"></i> Chế độ (Modes)</a></li>
+      <li class="nav-item"><a href="MainController?action=SearchRule" class="nav-link"><i class="fas fa-moon"></i> Luật lệ </a></li>
     </ul>
   </aside>
 

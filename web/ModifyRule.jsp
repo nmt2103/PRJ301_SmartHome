@@ -9,11 +9,15 @@
   </head>
   <body>
     <h1>${ACTION} Rule</h1>
-    <form action="RuleServlet" method="POST">
+    <form action="MainController" method="POST">
+      <input type="hidden" name="action" value="${ACTION == 'Add' ? 'AddRule' : 'UpdateRule'}">
 
       <c:if test="${ACTION == 'Update'}">
         <label for="ruleId">Rule ID:</label>
         <input type="text" name="ruleId" value="${RULE.id}" readonly>
+        <br>
+        <label for="homeId">Home ID:</label>
+        <input type="text" name="homeId" value="${RULE.homeId}" readonly>
         <br>
       </c:if>
 
@@ -39,19 +43,19 @@
       <label for="priority">Priority:</label>
       <input type="number" name="priority" value="${RULE.priority}" required>
       <br>
-      <label for="active">Active:</label>
-      <select id="active" name="active">
-        <option value="1" ${RULE.active == 1 ? 'selected' : ''}>Active</option>
-        <option value="0" ${RULE.active == 0 ? 'selected' : ''}>Inactive</option>
+      <label for="status">Status:</label>
+      <select id="status" name="status">
+        <option value="true" ${RULE.status ? 'selected' : ''}>Active</option>
+        <option value="false" ${!RULE.status ? 'selected' : ''}>Inactive</option>
       </select>
       <br>
-      <input type="submit" name="action" value="${ACTION}">
+      <input type="submit" value="${ACTION}">
     </form>
 
     <c:if test="${not empty ERROR_MSG}">
       <p>${ERROR_MSG}</p>
     </c:if>
 
-    <a href="RuleServlet">Go back</a>
+    <a href="MainController?action=SearchRule">Go back</a>
   </body>
 </html>

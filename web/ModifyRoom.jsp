@@ -5,7 +5,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Update Room Page</title>
+    <title>${ACTION} Room Page</title>
   </head>
   <body>
     <%@ include file="Menu.jsp" %>
