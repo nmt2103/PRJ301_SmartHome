@@ -31,15 +31,14 @@ public class DeviceServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-            action = "search";
+            action = "SearchDevice";
         }
-        action = action.toLowerCase();
 
         DeviceDAO deviceDao = new DeviceDAO();
         RoomDAO roomDao = new RoomDAO();
         try {
             switch (action) {
-                case "search":
+                case "SearchDevice":
                     String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
                     String roomIdStr = request.getParameter("roomId");
                     String status = request.getParameter("status") != null ? request.getParameter("status") : "";
@@ -57,33 +56,28 @@ public class DeviceServlet extends HttpServlet {
                     request.getRequestDispatcher("DeviceList.jsp").forward(request, response);
                     break;
 
-                case "create":
+                case "DeviceForm":
+                    String idStr = request.getParameter("id");
+                    if (idStr != null && !idStr.isEmpty()) {
+                        int editId = Integer.parseInt(idStr);
+                        DeviceDTO deviceToEdit = deviceDao.getDeviceById(editId);
+                        request.setAttribute("DEVICE", deviceToEdit);
+                    }
+
                     request.setAttribute("ROOM_LIST", roomDao.getRooms("", ""));
                     request.getRequestDispatcher("DeviceForm.jsp").forward(request, response);
                     break;
-
-                case "edit":
-                    int editId = Integer.parseInt(request.getParameter("id"));
-                    DeviceDTO deviceToEdit = deviceDao.getDeviceById(editId);
-
-                    request.setAttribute("DEVICE", deviceToEdit);
-                    request.setAttribute("ROOM_LIST", roomDao.getRooms("", ""));
-                    request.getRequestDispatcher("DeviceForm.jsp").forward(request, response);
-                    break;
-
-                case "delete":
+                case "DeleteDevice":
                     int deleteId = Integer.parseInt(request.getParameter("id"));
                     deviceDao.deleteDevice(deleteId);
-                    response.sendRedirect("DeviceServlet?action=search");
+                    response.sendRedirect("DeviceServlet?action=SearchDevice");
                     break;
-                case "toggle":
+                case "ToggleDevice":
                     int toggleId = Integer.parseInt(request.getParameter("id"));
-                    String currentStatus = request.getParameter("status");
+                    boolean currentStatus = Boolean.parseBoolean(request.getParameter("currentStatus"));
 
-                    String newStatus = "Active".equalsIgnoreCase(currentStatus) ? "Inactive" : "Active";
-
-                    deviceDao.toggleDeviceStatus(toggleId, newStatus);
-                    response.sendRedirect("DeviceServlet?action=search");
+                    deviceDao.toggleDeviceStatus(toggleId, !currentStatus);
+                    response.sendRedirect("MainController?action=SearchDevice");
                     break;
 
             }
@@ -101,52 +95,32 @@ public class DeviceServlet extends HttpServlet {
         DeviceDAO deviceDao = new DeviceDAO();
 
         try {
-            // --- XỬ LÝ RIÊNG CHO CHỨC NĂNG TOGGLE ---
-            if ("toggle".equalsIgnoreCase(action)) {
-                int toggleId = Integer.parseInt(request.getParameter("id"));
-                // Hứng đúng tên biến currentStatus từ file JSP gửi lên
-                String currentStatus = request.getParameter("currentStatus");
-
-                // Đảo trạng thái
-                String newStatus = "Active".equalsIgnoreCase(currentStatus) ? "Inactive" : "Active";
-
-                deviceDao.toggleDeviceStatus(toggleId, newStatus);
-                response.sendRedirect("DeviceServlet?action=search");
-                return; // Kết thúc luôn tại đây, không chạy xuống phần dưới nữa
-            }
-            // ----------------------------------------
-
-            // 1. Lấy thông tin từ Form (Dành cho Insert/Update)
             String type = request.getParameter("type");
             String serialNo = request.getParameter("serialNo");
             String vendor = request.getParameter("vendor");
             int roomId = Integer.parseInt(request.getParameter("roomId"));
-            String status = request.getParameter("status");
-
-            if (status == null) {
-                status = "";
-            }
+            String statusParam = request.getParameter("status");
+            boolean isActive = "Active".equalsIgnoreCase(statusParam) || "1".equals(statusParam);
 
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
             RoomDTO room = new RoomDTO();
             room.setId(roomId);
 
-            if ("insert".equalsIgnoreCase(action)) {
-                DeviceDTO newDevice = new DeviceDTO(0, type, serialNo, vendor, status, currentTimestamp, room);
+            if ("AddDevice".equalsIgnoreCase(action)) {
+                DeviceDTO newDevice = new DeviceDTO(0, type, serialNo, vendor, isActive, currentTimestamp, room);
                 deviceDao.createDevice(newDevice);
 
-            } else if ("update".equalsIgnoreCase(action)) {
+            } else if ("UpdateDevice".equalsIgnoreCase(action)) {
                 int id = Integer.parseInt(request.getParameter("id"));
-                DeviceDTO updateDevice = new DeviceDTO(id, type, serialNo, vendor, status, currentTimestamp, room);
+                DeviceDTO updateDevice = new DeviceDTO(id, type, serialNo, vendor, isActive, currentTimestamp, room);
                 deviceDao.updateDevice(updateDevice);
             }
 
-            // 3. Cập nhật xong thì quay về trang danh sách
-            response.sendRedirect("DeviceServlet?action=search");
+            response.sendRedirect("DeviceServlet?action=SearchDevice");
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("DeviceServlet?action=search");
+            response.sendRedirect("DeviceServlet?action=SearchDevice");
         }
     }
 }

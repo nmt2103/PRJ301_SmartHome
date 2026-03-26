@@ -3,11 +3,9 @@
 <%@page import="dto.HomeDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    // Nhận dữ liệu từ Controller
     List<HomeModeDTO> modeList = (List<HomeModeDTO>) request.getAttribute("MODE_LIST");
     List<HomeDTO> homeList = (List<HomeDTO>) request.getAttribute("HOME_LIST");
 
-    // Giữ lại trạng thái của bộ lọc
     String paramKeyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
     String paramHomeId = request.getParameter("homeId") != null ? request.getParameter("homeId") : "0";
     String paramStatus = request.getParameter("activeStatus") != null ? request.getParameter("activeStatus") : "";
@@ -18,13 +16,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Home Mode Management - Smart Home</title>
         <style>
-            /* Import font Nunito cho đồng bộ với Menu */
             @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
             body {
                 font-family: 'Nunito', sans-serif;
-                background-color: #FAF7F2; /* Nền trang màu kem sáng ấm áp */
-                color: #4A3324; /* Chữ màu nâu sẫm */
+                background-color: #FAF7F2;
+                color: #4A3324;
                 padding: 20px;
             }
 
@@ -35,12 +32,11 @@
                 align-items: center;
             }
 
-            /* Định dạng Box Lọc (Filter) */
             .filter-box {
                 background: #FFFFFF;
                 padding: 15px 20px;
-                border: 1px solid #E6D5B8; /* Viền màu Latte */
-                border-radius: 12px; /* Bo góc mềm mại */
+                border: 1px solid #E6D5B8;
+                border-radius: 12px;
                 margin-bottom: 20px;
                 box-shadow: 0 4px 12px rgba(139, 69, 19, 0.05);
                 display: flex;
@@ -57,14 +53,13 @@
                 outline: none;
             }
 
-            /* Định dạng Bảng (Table) */
             table {
                 width: 100%;
                 border-collapse: separate;
                 border-spacing: 0;
                 background-color: #FFFFFF;
-                border-radius: 12px; /* Bo góc toàn bộ bảng */
-                overflow: hidden; /* Giữ cho góc bo không bị trào ra */
+                border-radius: 12px;
+                overflow: hidden;
                 box-shadow: 0 4px 12px rgba(139, 69, 19, 0.05);
             }
 
@@ -142,15 +137,17 @@
     </head>
     <body>
         <%@ include file="Menu.jsp" %>
+
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="color: #6C4F3D; font-weight: 800; margin: 0;">
                 Home Mode Management
             </h2>
-            <a href="HomeModeServlet?action=create" class="btn btn-add">+ Add New Mode</a>
+            <a href="MainController?action=HomeModeForm" class="btn btn-add">+ Add New Mode</a>
         </div>
+
         <div class="filter-box">
-            <form action="HomeModeServlet" method="GET">
-                <input type="hidden" name="action" value="search">
+            <form action="MainController" method="GET">
+                <input type="hidden" name="action" value="SearchHomeMode">
 
                 <label>Search:</label>
                 <input type="text" name="keyword" value="<%= paramKeyword%>" placeholder="Mode name...">
@@ -189,36 +186,39 @@
                     <th>Active From</th>
                     <th>Active To</th>
                     <th>Assigned Home</th>
-                    <th>Status (Toggle)</th>
+                    <th>Status </th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <%
                     if (modeList != null && !modeList.isEmpty()) {
+                    int stt = 1;
                         for (HomeModeDTO mode : modeList) {
+                            String toggleClass = mode.isStatus() ? "btn-active" : "btn-inactive";
+                            String toggleText = mode.isStatus() ? "Active" : "Inactive";
                 %>
                 <tr>
-                    <td><%= mode.getId()%></td>
+                    <td><%= stt++ %></td>
                     <td><strong><%= mode.getName()%></strong></td>
                     <td><%= mode.getAct_fr()%></td>
                     <td><%= mode.getAct_to()%></td>
                     <td><%= mode.getHomeId().getName()%></td>
 
                     <td>
-                        <a href="HomeModeServlet?action=toggle&id=<%= mode.getId()%>&currentStatus=<%= mode.isIs_act()%>">
-                            <% if (mode.isIs_act()) { %>
-                            <span class="btn btn-active">Active</span>
-                            <% } else { %>
-                            <span class="btn btn-inactive">Inactive</span>
-                            <% }%>
+                        <a href="MainController?action=ToggleHomeMode&id=<%= mode.getId()%>&currentStatus=<%= mode.isStatus() %>" 
+                           class="btn <%= toggleClass%>" style="padding: 4px 10px; text-decoration: none;">
+                            <%= toggleText%>
                         </a>
                     </td>
 
                     <td>
-                        <a href="HomeModeServlet?action=edit&id=<%= mode.getId()%>" class="btn btn-edit">Edit</a>
-                        <a href="HomeModeSetvlet?action=delete&id=<%= mode.getId()%>" class="btn btn-delete" 
-                           onclick="return confirm('Are you sure you want to delete this mode permanently?');">Delete</a>
+                        <div class="action-forms" style="display: flex; gap: 5px;">
+                            <a href="MainController?action=HomeModeForm&id=<%= mode.getId()%>" class="btn btn-edit">Edit</a>
+
+                            <a href="MainController?action=DeleteHomeMode&id=<%= mode.getId()%>" class="btn btn-delete" 
+                               onclick="return confirm('Are you sure you want to delete this mode permanently?');">Delete</a>
+                        </div>
                     </td>
                 </tr>
                 <%
@@ -226,11 +226,13 @@
                 } else {
                 %>
                 <tr>
-                    <td colspan="7" style="text-align: center; color: red;">No home modes found!</td>
+                    <td colspan="7" style="text-align: center; color: #E76F51; font-weight: bold; padding: 20px;">No home modes found!</td>
                 </tr>
                 <% }%>
             </tbody>
         </table>
 
-    </body>
+    </main>
+</div>
+</body>
 </html>
