@@ -40,6 +40,6 @@
       <p>${ERROR_MSG}</p>
     </c:if>
 
-    <a href="HomeServlet">Go back</a>
+    <a href="MainController?action=SearchHome">Go back</a>
   </body>
 </html>

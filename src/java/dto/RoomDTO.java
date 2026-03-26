@@ -7,12 +7,12 @@ public class RoomDTO {
   private String name;
   private int floor;
   private String type;
-  private String status;
+  private boolean status;
 
   public RoomDTO() {
   }
 
-  public RoomDTO(int id, String name, int floor, String type, String status) {
+  public RoomDTO(int id, String name, int floor, String type, boolean status) {
     this.id = id;
     this.name = name;
     this.floor = floor;
@@ -20,7 +20,7 @@ public class RoomDTO {
     this.status = status;
   }
 
-  public RoomDTO(int homeId, int floor, String name, String type, String status) {
+  public RoomDTO(int homeId, int floor, String name, String type, boolean status) {
     this.homeId = homeId;
     this.name = name;
     this.floor = floor;
@@ -28,14 +28,14 @@ public class RoomDTO {
     this.status = status;
   }
 
-  public RoomDTO(String name, int floor, String type, String status) {
+  public RoomDTO(String name, int floor, String type, boolean status) {
     this.name = name;
     this.floor = floor;
     this.type = type;
     this.status = status;
   }
 
-  public RoomDTO(int id, int homeId, String name, int floor, String type, String status) {
+  public RoomDTO(int id, int homeId, String name, int floor, String type, boolean status) {
     this.id = id;
     this.homeId = homeId;
     this.name = name;
@@ -84,11 +84,11 @@ public class RoomDTO {
     this.type = type;
   }
 
-  public String getStatus() {
+  public boolean isStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(boolean status) {
     this.status = status;
   }
 }
