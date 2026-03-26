@@ -146,10 +146,11 @@
     <div class="brand"><i class="fas fa-home"></i><div class="brand-text"><h2>Nhà Của Tôi</h2><span>Smart Management</span></div></div>
     <ul class="nav-menu">
       <li class="nav-item"><a href="DashBoard.jsp" class="nav-link"><i class="fas fa-th-large"></i> Tổng quan</a></li>
-      <li class="nav-item"><a href="HomeServlet?action=SearchHome" class="nav-link"><i class="fas fa-building"></i> Quản lý Nhà</a></li>
-      <li class="nav-item"><a href="RoomServlet?action=SearchRoom" class="nav-link"><i class="fas fa-couch"></i> Quản lý Phòng</a></li>
-      <li class="nav-item"><a href="DeviceServlet?action=SearchDevice" class="nav-link"><i class="fas fa-lightbulb"></i> Quản lý Thiết bị</a></li>
-      <li class="nav-item"><a href="HomeModeServlet?action=SearchHomeMode" class="nav-link"><i class="fas fa-moon"></i> Chế độ (Modes)</a></li>
+      <li class="nav-item"><a href="MainController?action=SearchHome" class="nav-link"><i class="fas fa-building"></i> Quản lý Nhà</a></li>
+      <li class="nav-item"><a href="MainController?action=SearchRoom" class="nav-link"><i class="fas fa-couch"></i> Quản lý Phòng</a></li>
+      <li class="nav-item"><a href="MainController?action=SearchDevice" class="nav-link"><i class="fas fa-lightbulb"></i> Quản lý Thiết bị</a></li>
+      <li class="nav-item"><a href="MainController?action=SearchHomeMode" class="nav-link"><i class="fas fa-moon"></i> Chế độ (Modes)</a></li>
+      <li class="nav-item"><a href="MainController?action=SearchRule" class="nav-link"><i class="fas fa-moon"></i> Luật lệ </a></li>
     </ul>
   </aside>
 

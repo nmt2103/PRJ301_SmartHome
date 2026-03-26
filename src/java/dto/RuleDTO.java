@@ -6,51 +6,48 @@ public class RuleDTO {
 
   private int id;
   private int homeId;
-//  private int alert_id;
   private String name;
   private String triggerType;
-//  private String condition_json;
-//  private String action_json;
   private int priority;
-  private int active;
-  private Timestamp created_at;
+  private boolean status;
+  private Timestamp createdAt;
 
   public RuleDTO() {
   }
 
-  public RuleDTO(String name, int id, String trigger_type, int priority, int active) {
+  public RuleDTO(String name, int id, String trigger_type, int priority, boolean status) {
     this.name = name;
     this.id = id;
     this.triggerType = trigger_type;
     this.priority = priority;
-    this.active = active;
+    this.status = status;
   }
 
-  public RuleDTO(int home_id, String name, String trigger_type, int priority, int active) {
+  public RuleDTO(int home_id, String name, String trigger_type, int priority, boolean status) {
     this.homeId = home_id;
     this.name = name;
     this.triggerType = trigger_type;
     this.priority = priority;
-    this.active = active;
+    this.status = status;
   }
 
-  public RuleDTO(int id, int home_id, String name, String trigger_type, int priority, int active) {
-    this.id = id;
-    this.homeId = home_id;
-    this.name = name;
-    this.triggerType = trigger_type;
-    this.priority = priority;
-    this.active = active;
-  }
-
-  public RuleDTO(int id, int home_id, String name, String trigger_type, int priority, int active, Timestamp created_at) {
+  public RuleDTO(int id, int home_id, String name, String trigger_type, int priority, boolean status) {
     this.id = id;
     this.homeId = home_id;
     this.name = name;
     this.triggerType = trigger_type;
     this.priority = priority;
-    this.active = active;
-    this.created_at = created_at;
+    this.status = status;
+  }
+
+  public RuleDTO(int id, int home_id, String name, String trigger_type, int priority, boolean status, Timestamp createdAt) {
+    this.id = id;
+    this.homeId = home_id;
+    this.name = name;
+    this.triggerType = trigger_type;
+    this.priority = priority;
+    this.status = status;
+    this.createdAt = createdAt;
   }
 
   public int getId() {
@@ -93,19 +90,19 @@ public class RuleDTO {
     this.priority = priority;
   }
 
-  public int getActive() {
-    return active;
+  public boolean getStatus() {
+    return status;
   }
 
-  public void setActive(int active) {
-    this.active = active;
+  public void setStatus(boolean status) {
+    this.status = status;
   }
 
-  public Timestamp getCreated_at() {
-    return created_at;
+  public Timestamp getCreatedAt() {
+    return createdAt;
   }
 
-  public void setCreated_at(Timestamp created_at) {
-    this.created_at = created_at;
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
   }
 }

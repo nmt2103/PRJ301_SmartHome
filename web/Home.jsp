@@ -185,7 +185,7 @@
       <td><%= home.getAddress()%></td>
       <td>
         <span class="btn <%= statusClass%>" style="cursor: default; padding: 4px 10px;">
-          <%= home.isStatus()%>
+          <%= home.isStatus() ? "Active" : "Inactive"%>
         </span>
       </td>
       <td>

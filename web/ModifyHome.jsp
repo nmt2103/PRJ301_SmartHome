@@ -29,8 +29,8 @@
       <br>
       <label for="status">Status</label>
       <select id="status" name="status">
-        <option value="1" ${HOME.status ? 'selected' : ''}>Active</option>
-        <option value="0" ${HOME.status ? 'selected' : ''}>Inactive</option>
+        <option value="true" ${HOME.status ? 'selected' : ''}>Active</option>
+        <option value="false" ${!HOME.status ? 'selected' : ''}>Inactive</option>
       </select>
       <br>
       <input type="submit" value="${ACTION}">
@@ -40,6 +40,6 @@
       <p>${ERROR_MSG}</p>
     </c:if>
 
-    <a href="HomeServlet">Go back</a>
+    <a href="MainController?action=SearchHome">Go back</a>
   </body>
 </html>

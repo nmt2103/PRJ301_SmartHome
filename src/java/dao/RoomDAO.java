@@ -21,7 +21,7 @@ public class RoomDAO {
       ptm.setString(2, room.getName());
       ptm.setInt(3, room.getFloor());
       ptm.setString(4, room.getType());
-      ptm.setString(5, room.getStatus());
+      ptm.setBoolean(5, room.isStatus());
 
       return ptm.executeUpdate() > 0;
     } catch (Exception e) {
@@ -61,7 +61,7 @@ public class RoomDAO {
         searchedList.add(new RoomDTO(
                 rs.getInt("ID"), rs.getInt("HOME_ID"),
                 rs.getString("NAME"), rs.getInt("FLOOR"),
-                rs.getString("TYPE"), rs.getString("STATUS")));
+                rs.getString("TYPE"), rs.getBoolean("STATUS")));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -82,7 +82,7 @@ public class RoomDAO {
       if (rs.next()) {
         room = new RoomDTO(rs.getInt("ID"), rs.getInt("HOME_ID"),
                 rs.getString("NAME"), rs.getInt("FLOOR"),
-                rs.getString("TYPE"), rs.getString("STATUS"));
+                rs.getString("TYPE"), rs.getBoolean("STATUS"));
       }
 
     } catch (Exception e) {
@@ -101,7 +101,7 @@ public class RoomDAO {
       ptm.setString(1, room.getName());
       ptm.setInt(2, room.getFloor());
       ptm.setString(3, room.getType());
-      ptm.setString(4, room.getStatus());
+      ptm.setBoolean(4, room.isStatus());
       ptm.setInt(5, room.getId());
 
       return ptm.executeUpdate() > 0;
