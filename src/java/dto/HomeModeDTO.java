@@ -8,18 +8,18 @@ public class HomeModeDTO {
     private String name;
     private Time act_fr;
     private Time act_to;
-    private boolean is_act;
+    private boolean status;
     private HomeDTO homeId;
 
     public HomeModeDTO() {
     }
 
-    public HomeModeDTO(int id, String name, Time act_fr, Time act_to, boolean is_act, HomeDTO homeId) {
+    public HomeModeDTO(int id, String name, Time act_fr, Time act_to, boolean status, HomeDTO homeId) {
         this.id = id;
         this.name = name;
         this.act_fr = act_fr;
         this.act_to = act_to;
-        this.is_act = is_act;
+        this.status = status;
         this.homeId = homeId;
     }
 
@@ -55,12 +55,12 @@ public class HomeModeDTO {
         this.act_to = act_to;
     }
 
-    public boolean isIs_act() {
-        return is_act;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setIs_act(boolean is_act) {
-        this.is_act = is_act;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public HomeDTO getHomeId() {

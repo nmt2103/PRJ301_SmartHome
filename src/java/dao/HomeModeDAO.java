@@ -20,18 +20,21 @@ public class HomeModeDAO {
 
     public ArrayList<HomeModeDTO> searchHomeMode(String value, int homeId, String status) {
         ArrayList<HomeModeDTO> list = new ArrayList<>();
-        String query = "SELECT m.ID, m.NAME, m.ACTIVE_FROM, m.ACTIVE_TO, m.IS_ACTIVE, m.HOME_ID, h.NAME AS HOME_NAME "
+
+        String query = "SELECT m.ID, m.NAME, m.ACTIVE_FROM, m.ACTIVE_TO, m.STATUS, m.HOME_ID, h.NAME AS HOME_NAME "
                 + "FROM HOMEMODE m "
                 + "INNER JOIN HOME h ON m.HOME_ID = h.ID "
                 + "WHERE m.NAME LIKE ? "
                 + "AND (? = 0 OR m.HOME_ID = ?) ";
-        if ("1".equalsIgnoreCase(status)) {
-            query += " AND m.IS_ACTIVE = 1";
-        } else if ("0".equalsIgnoreCase(status)) {
-            query += " AND m.IS_ACTIVE = 0";
+
+        if ("1".equalsIgnoreCase(status) || "true".equalsIgnoreCase(status)) {
+            query += " AND m.STATUS = 1 ";
+        } else if ("0".equalsIgnoreCase(status) || "false".equalsIgnoreCase(status)) {
+            query += " AND m.STATUS = 0 ";
         }
 
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
+
             stmt.setString(1, "%" + value + "%");
             stmt.setInt(2, homeId);
             stmt.setInt(3, homeId);
@@ -48,7 +51,8 @@ public class HomeModeDAO {
                 hm.setName(rs.getString("NAME"));
                 hm.setAct_fr(rs.getTime("ACTIVE_FROM"));
                 hm.setAct_to(rs.getTime("ACTIVE_TO"));
-                hm.setIs_act(rs.getBoolean("IS_ACTIVE"));
+
+                hm.setStatus(rs.getBoolean("STATUS"));
                 hm.setHomeId(home);
 
                 list.add(hm);
@@ -61,13 +65,13 @@ public class HomeModeDAO {
 
     public boolean createHomeMode(HomeModeDTO hm) {
         boolean check = false;
-        String query = "INSERT INTO HOMEMODE (NAME, ACTIVE_FROM, ACTIVE_TO, IS_ACTIVE, HOME_ID) VALUES (?,?,?,?,?)";
+        String query = "INSERT INTO HOMEMODE (NAME, ACTIVE_FROM, ACTIVE_TO, STATUS, HOME_ID) VALUES (?,?,?,?,?)";
 
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, hm.getName());
             stmt.setTime(2, hm.getAct_fr());
             stmt.setTime(3, hm.getAct_to());
-            stmt.setBoolean(4, hm.isIs_act());
+            stmt.setBoolean(4, hm.isStatus());
             stmt.setInt(5, hm.getHomeId().getId());
 
             if (stmt.executeUpdate() > 0) {
@@ -79,14 +83,14 @@ public class HomeModeDAO {
         return check;
     }
 
-    public boolean updateHomeMode(HomeModeDTO hm) {
+   public boolean updateHomeMode(HomeModeDTO hm) {
         boolean check = false;
-        String query = "UPDATE HOMEMODE SET NAME=?, ACTIVE_FROM=?, ACTIVE_TO=?, HOME_ID=?, WHERE ID=?";
+        String query = "UPDATE HOMEMODE SET NAME=?, ACTIVE_FROM=?, ACTIVE_TO=?, STATUS=?, HOME_ID=? WHERE ID=?";
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, hm.getName());
             stmt.setTime(2, hm.getAct_fr());
             stmt.setTime(3, hm.getAct_to());
-            stmt.setBoolean(4, hm.isIs_act());
+            stmt.setBoolean(4, hm.isStatus()); 
             stmt.setInt(5, hm.getHomeId().getId());
             stmt.setInt(6, hm.getId());
 
@@ -114,7 +118,7 @@ public class HomeModeDAO {
                         rs.getString("NAME"),
                         rs.getTime("ACTIVE_FROM"),
                         rs.getTime("ACTIVE_TO"),
-                        rs.getBoolean("IS_ACTIVE"),
+                        rs.getBoolean("STATUS"),
                         home);
 
             }
@@ -140,11 +144,10 @@ public class HomeModeDAO {
 
     public boolean toggleHomeModeStatus(int hmId, boolean status) {
         boolean check = false;
-        boolean newStatus = !status;
 
-        String query = "UPDATE HOMEMODE SET IS_ACTIVE = ? WHERE ID = ?";
+        String query = "UPDATE HOMEMODE SET STATUS = ? WHERE ID = ?";
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setBoolean(1, newStatus);
+            stmt.setBoolean(1, status);
             stmt.setInt(2, hmId);
 
             if (stmt.executeUpdate() > 0) {

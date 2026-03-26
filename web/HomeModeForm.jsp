@@ -7,13 +7,13 @@
     List<HomeDTO> homeList = (List<HomeDTO>) request.getAttribute("HOME_LIST");
 
     boolean isEdit = (mode != null);
-    String actionType = isEdit ? "update" : "insert";
+    String actionType = isEdit ? "UpdateHomeMode" : "AddHomeMode";
     String pageTitle = isEdit ? "Edit Home Mode" : "Add New Home Mode";
 
     int modeId = isEdit ? mode.getId() : 0;
     String name = isEdit ? mode.getName() : "";
     int currentHomeId = (isEdit && mode.getHomeId() != null) ? mode.getHomeId().getId() : 0;
-    boolean isActive = isEdit ? mode.isIs_act() : true; // Mặc định là true khi thêm mới
+    boolean isActive = isEdit ? mode.isStatus() : true; 
 
     String activeFromStr = (isEdit && mode.getAct_fr() != null) ? mode.getAct_fr().toString().substring(0, 5) : "00:00";
     String activeToStr = (isEdit && mode.getAct_to() != null) ? mode.getAct_to().toString().substring(0, 5) : "23:59";
@@ -137,7 +137,7 @@
                 </div>
 
                 <button type="submit" class="btn-submit">Save Mode</button>
-                <a href="HomeModeServlet?action=search" class="btn-cancel">Cancel / Go Back</a>
+                <a href="HomeModeServlet?action=SearchHomeMode" class="btn-cancel">Cancel / Go Back</a>
             </form>
         </div>
 

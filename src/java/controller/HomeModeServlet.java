@@ -24,15 +24,15 @@ public class HomeModeServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-            action = "search"; 
+            action = "SearchHomeMode";
         }
 
         HomeModeDAO modeDao = new HomeModeDAO();
         HomeDAO homeDao = new HomeDAO();
 
         try {
-            switch (action.toLowerCase()) {
-                case "search":
+            switch (action) {
+                case "SearchHomeMode":
                     String keyword = request.getParameter("keyword") != null ? request.getParameter("keyword") : "";
                     String status = request.getParameter("activeStatus") != null ? request.getParameter("activeStatus") : "";
                     String homeIdStr = request.getParameter("homeId");
@@ -50,32 +50,29 @@ public class HomeModeServlet extends HttpServlet {
                     request.getRequestDispatcher("HomeModeList.jsp").forward(request, response);
                     break;
 
-                case "create":
+                case "HomeModeForm":
+                    String idStr = request.getParameter("id");
+                    if (idStr != null && !idStr.isEmpty()) {
+                        int editId = Integer.parseInt(idStr);
+                        HomeModeDTO modeToEdit = modeDao.getHomeModeByID(editId);
+                        request.setAttribute("MODE", modeToEdit);
+                    }
                     request.setAttribute("HOME_LIST", homeDao.getHomes("", ""));
                     request.getRequestDispatcher("HomeModeForm.jsp").forward(request, response);
                     break;
 
-                case "edit":
-                    int editId = Integer.parseInt(request.getParameter("id"));
-                    HomeModeDTO modeToEdit = modeDao.getHomeModeByID(editId);
-
-                    request.setAttribute("MODE", modeToEdit);
-                    request.setAttribute("HOME_LIST", homeDao.getHomes("", ""));
-                    request.getRequestDispatcher("HomeModeForm.jsp").forward(request, response);
-                    break;
-
-                case "delete":
+                case "DeleteHomeMode":
                     int deleteId = Integer.parseInt(request.getParameter("id"));
                     modeDao.deleteHomeMode(deleteId);
-                    response.sendRedirect("HomeModeServlet?action=search");
+                    response.sendRedirect("MainController?action=SearchHomeMode");
                     break;
 
-                case "toggle":
+                case "ToggleHomeMode":
                     int toggleId = Integer.parseInt(request.getParameter("id"));
                     boolean currentStatus = Boolean.parseBoolean(request.getParameter("currentStatus"));
 
-                    modeDao.toggleHomeModeStatus(toggleId, currentStatus);
-                    response.sendRedirect("HomeModeServlet?action=search");
+                    modeDao.toggleHomeModeStatus(toggleId, !currentStatus);
+                    response.sendRedirect("MainController?action=SearchHomeMode");
                     break;
             }
         } catch (Exception e) {
@@ -105,17 +102,17 @@ public class HomeModeServlet extends HttpServlet {
             HomeDTO home = new HomeDTO();
             home.setId(homeId);
 
-            if ("Insert".equals(action)) {
+            if ("AddHomeMode".equals(action)) {
                 HomeModeDTO newMode = new HomeModeDTO(0, name, activeFrom, activeTo, isActive, home);
                 modeDao.createHomeMode(newMode);
 
-            } else if ("Save".equals(action)) { // Lúc nãy cập nhật mình hay dùng chữ Update/Save
+            } else if ("UpdateHomeMode".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 HomeModeDTO updateMode = new HomeModeDTO(id, name, activeFrom, activeTo, isActive, home);
                 modeDao.updateHomeMode(updateMode);
             }
 
-            response.sendRedirect("HomeModeServlet?action=Search");
+            response.sendRedirect("HomeModeServlet?action=SearchHomeMode");
 
         } catch (Exception e) {
             e.printStackTrace();

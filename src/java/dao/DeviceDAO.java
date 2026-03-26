@@ -21,18 +21,19 @@ public class DeviceDAO {
                 + "INNER JOIN ROOM r ON d.ROOM_ID = r.ID "
                 + "INNER JOIN HOME h ON r.HOME_ID = h.ID "
                 + "WHERE (d.SERIAL_NO LIKE ? OR d.TYPE LIKE ?) "
-                + "AND (? = 0 OR d.ROOM_ID = ?)"
-                + " AND (? = '' OR d.STATUS = ?)";
+                + "AND (? = 0 OR d.ROOM_ID = ?)";
+        
+        if ("Active".equalsIgnoreCase(status) || "1".equals(status)) {
+            query += " AND d.STATUS = 1 ";
+        } else if ("Inactive".equalsIgnoreCase(status) || "0".equals(status)) {
+            query += " AND d.STATUS = 0 ";
+        }
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, "%" + value + "%");
             stmt.setString(2, "%" + value + "%");
-
             stmt.setInt(3, roomId);
             stmt.setInt(4, roomId);
-
-            stmt.setString(5, status);
-            stmt.setString(6, status);
 
             ResultSet rs = stmt.executeQuery();
 
@@ -50,7 +51,7 @@ public class DeviceDAO {
                 String type = rs.getString("TYPE");
                 String serial = rs.getString("SERIAL_NO");
                 String vendor = rs.getString("VENDOR");
-                String devStatus = rs.getString("STATUS");
+                Boolean devStatus = rs.getBoolean("STATUS");
                 Timestamp lastseen = rs.getTimestamp("LAST_SEEN_ST");
 
                 DeviceDTO dev = new DeviceDTO(id, type, serial, vendor, devStatus, lastseen, room);
@@ -70,7 +71,7 @@ public class DeviceDAO {
             stmt.setString(1, dev.getType());
             stmt.setString(2, dev.getSerial());
             stmt.setString(3, dev.getVendor());
-            stmt.setString(4, dev.getStatus());
+            stmt.setBoolean(4, dev.isStatus());
             stmt.setTimestamp(5, dev.getLastSeen());
             stmt.setInt(6, dev.getRoomId().getId());
 
@@ -85,14 +86,14 @@ public class DeviceDAO {
 
     public boolean updateDevice(DeviceDTO dev) {
         boolean check = false;
-        String query = "UPDATE DEVICE"
+        String query = "UPDATE DEVICE "
                 + "SET TYPE = ?, SERIAL_NO = ?, VENDOR = ?, STATUS = ?, LAST_SEEN_ST = ?, ROOM_ID = ?"
-                + "WHERE ID = ?";
+                + " WHERE ID = ?";
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, dev.getType());
             stmt.setString(2, dev.getSerial());
             stmt.setString(3, dev.getVendor());
-            stmt.setString(4, dev.getStatus());
+            stmt.setBoolean(4, dev.isStatus());
             stmt.setTimestamp(5, dev.getLastSeen());
             stmt.setInt(6, dev.getRoomId().getId());
             stmt.setInt(7, dev.getId());
@@ -134,7 +135,7 @@ public class DeviceDAO {
                 String type = rs.getString("TYPE");
                 String serial = rs.getString("SERIAL_NO");
                 String vendor = rs.getString("VENDOR");
-                String status = rs.getString("STATUS");
+                boolean status = rs.getBoolean("STATUS");
                 Timestamp lastSeen = rs.getTimestamp("LAST_SEEN_ST");
 
                 int roomId = rs.getInt("ROOM_ID");
@@ -149,14 +150,14 @@ public class DeviceDAO {
         return dev;
     }
 
-    public boolean toggleDeviceStatus(int devId, String newStatus) {
+    public boolean toggleDeviceStatus(int devId, boolean newStatus) {
         boolean check = false;
 
         String query = "UPDATE DEVICE SET STATUS = ? WHERE ID = ?";
 
         try ( Connection conn = DBUtils.getConnection();  PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, newStatus);
+            stmt.setBoolean(1, newStatus);
             stmt.setInt(2, devId);
 
             if (stmt.executeUpdate() > 0) {

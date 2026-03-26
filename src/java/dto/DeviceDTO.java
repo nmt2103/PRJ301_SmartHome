@@ -8,14 +8,14 @@ public class DeviceDTO {
     private String type;
     private String serial;
     private String vendor;
-    private String status;
+    private boolean status;
     private Timestamp lastSeen;
     private RoomDTO roomId;
 
     public DeviceDTO() {
     }
 
-    public DeviceDTO(int id, String type, String serial, String vendor, String status, Timestamp lastSeen, RoomDTO roomId) {
+    public DeviceDTO(int id, String type, String serial, String vendor, boolean status, Timestamp lastSeen, RoomDTO roomId) {
         this.id = id;
         this.type = type;
         this.serial = serial;
@@ -57,11 +57,11 @@ public class DeviceDTO {
         this.vendor = vendor;
     }
 
-    public String getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
