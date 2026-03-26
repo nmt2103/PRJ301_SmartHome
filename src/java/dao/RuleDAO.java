@@ -11,7 +11,7 @@ import util.DBUtils;
 public class RuleDAO {
 
   public boolean insertRule(RuleDTO rule) {
-    String sql = "INSERT INTO RULES (HOME_ID, NAME, TRIGGER_TYPE, PRIORITY, ACTIVE, CREATED_AT)"
+    String sql = "INSERT INTO RULES (HOME_ID, NAME, TRIGGER_TYPE, PRIORITY, STATUS, CREATED_AT)"
             + " VALUES (?, ?, ?, ?, ?, GETDATE())";
 
     try ( Connection conn = DBUtils.getConnection();
@@ -21,7 +21,7 @@ public class RuleDAO {
       ptm.setString(2, rule.getName());
       ptm.setString(3, rule.getTriggerType());
       ptm.setInt(4, rule.getPriority());
-      ptm.setInt(5, rule.getActive());
+      ptm.setBoolean(5, rule.getStatus());
 
       return ptm.executeUpdate() > 0;
     } catch (Exception e) {
@@ -31,7 +31,7 @@ public class RuleDAO {
     return false;
   }
 
-  public List<RuleDTO> getRules(String name, String type) {
+  public List<RuleDTO> getRules(String name, String status) {
     List<RuleDTO> searchedList = new ArrayList<>();
     StringBuilder sql = new StringBuilder("SELECT * FROM RULES WHERE 1=1");
     List<Object> parameters = new ArrayList<>();
@@ -41,9 +41,9 @@ public class RuleDAO {
       parameters.add("%" + name + "%");
     }
 
-    if (type != null & !type.trim().isEmpty()) {
-      sql.append(" AND TRIGGER_TYPE LIKE ?");
-      parameters.add("%" + type + "%");
+    if (status != null && !status.trim().isEmpty()) {
+      sql.append(" AND STATUS = ?");
+      parameters.add(status);
     }
 
     try ( Connection conn = DBUtils.getConnection();
@@ -58,7 +58,7 @@ public class RuleDAO {
         searchedList.add(new RuleDTO(
                 rs.getInt("ID"), rs.getInt("HOME_ID"),
                 rs.getString("NAME"), rs.getString("TRIGGER_TYPE"),
-                rs.getInt("PRIORITY"), rs.getInt("ACTIVE")));
+                rs.getInt("PRIORITY"), rs.getBoolean("STATUS")));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -79,7 +79,7 @@ public class RuleDAO {
       if (rs.next()) {
         rule = new RuleDTO(rs.getInt("ID"), rs.getInt("HOME_ID"),
                 rs.getString("NAME"), rs.getString("TRIGGER_TYPE"),
-                rs.getInt("PRIORITY"), rs.getInt("ACTIVE"));
+                rs.getInt("PRIORITY"), rs.getBoolean("STATUS"));
       }
 
     } catch (Exception e) {
@@ -90,7 +90,7 @@ public class RuleDAO {
   }
 
   public boolean updateRule(RuleDTO rule) {
-    String sql = "UPDATE RULES SET NAME=?, TRIGGER_TYPE=?, PRIORITY=?, ACTIVE=? WHERE ID=?";
+    String sql = "UPDATE RULES SET NAME=?, TRIGGER_TYPE=?, PRIORITY=?, STATUS=? WHERE ID=?";
 
     try ( Connection conn = DBUtils.getConnection();
              PreparedStatement ptm = conn.prepareStatement(sql)) {
@@ -98,7 +98,7 @@ public class RuleDAO {
       ptm.setString(1, rule.getName());
       ptm.setString(2, rule.getTriggerType());
       ptm.setInt(3, rule.getPriority());
-      ptm.setInt(4, rule.getActive());
+      ptm.setBoolean(4, rule.getStatus());
       ptm.setInt(5, rule.getId());
 
       return ptm.executeUpdate() > 0;

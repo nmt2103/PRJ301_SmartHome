@@ -49,7 +49,7 @@ public class RoomServlet extends HttpServlet {
 
           List<RoomDTO> rooms = roomDAO.getRooms(searchName, filterStatus);
 
-          if (rooms == null | rooms.isEmpty()) {
+          if (rooms == null || rooms.isEmpty()) {
             rooms = roomDAO.getRooms("", "");
 
             request.setAttribute("ERROR_MSG", "Room not found! Showing all rooms.");
