@@ -31,58 +31,76 @@
             }
             .form-container {
                 background: white;
-                padding: 20px 30px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                padding: 30px 40px;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
                 max-width: 500px;
                 margin: auto;
+                border: 1px solid #E6D5B8;
             }
             h2 {
                 text-align: center;
                 color: #6C4F3D;
-                font-weight: 700;
+                font-weight: 800;
+                margin-bottom: 25px;
             }
             .form-group {
-                margin-bottom: 15px;
+                margin-bottom: 18px;
             }
             label {
                 display: block;
                 font-weight: bold;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
+                color: #4A3324;
             }
             input[type="text"], select {
                 width: 100%;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
+                padding: 12px;
+                border: 1px solid #D4A373;
+                border-radius: 8px;
                 box-sizing: border-box;
                 font-family: 'Nunito', sans-serif;
+                font-size: 15px;
+                outline: none;
+                transition: border 0.3s ease;
+            }
+            input:focus, select:focus {
+                border-color: #82A284;
             }
             .btn-submit {
-                background-color: #82A284;
+                background-color: #6C5CE7;
                 color: white;
-                padding: 10px 15px;
+                padding: 12px 15px;
                 border: none;
-                border-radius: 4px;
+                border-radius: 8px;
                 cursor: pointer;
                 width: 100%;
                 font-size: 16px;
-                font-weight: 600;
-                margin-top: 10px;
+                font-weight: 700;
+                margin-top: 20px;
+                transition: background-color 0.3s ease;
             }
             .btn-submit:hover {
-                background-color: #6C8C6E;
+                background-color: #5A4BCE;
             }
             .btn-cancel {
                 display: block;
                 text-align: center;
-                margin-top: 15px;
-                color: #E76F51;
+                background-color: #E76F51;
+                color: white;
+                padding: 12px 15px;
+                border-radius: 8px;
                 text-decoration: none;
-                font-weight: bold;
+                font-weight: 700;
+                font-size: 16px;
+                margin-top: 10px;
+                width: 100%;
+                box-sizing: border-box;
+                transition: background-color 0.3s ease;
             }
             .btn-cancel:hover {
-                text-decoration: underline;
+                background-color: #D05D43;
+                text-decoration: none;
             }
         </style>
     </head>

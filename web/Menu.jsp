@@ -143,14 +143,14 @@
 
 <div class="app-layout">
   <aside class="sidebar">
-    <div class="brand"><i class="fas fa-home"></i><div class="brand-text"><h2>Nhà Của Tôi</h2><span>Smart Management</span></div></div>
+    <div class="brand"><i class="fas fa-home"></i><div class="brand-text"><h2>My Home</h2><span>Smart Management</span></div></div>
     <ul class="nav-menu">
-      <li class="nav-item"><a href="DashBoard.jsp" class="nav-link"><i class="fas fa-th-large"></i> Tổng quan</a></li>
-      <li class="nav-item"><a href="MainController?action=SearchHome" class="nav-link"><i class="fas fa-building"></i> Quản lý Nhà</a></li>
-      <li class="nav-item"><a href="MainController?action=SearchRoom" class="nav-link"><i class="fas fa-couch"></i> Quản lý Phòng</a></li>
-      <li class="nav-item"><a href="MainController?action=SearchDevice" class="nav-link"><i class="fas fa-lightbulb"></i> Quản lý Thiết bị</a></li>
-      <li class="nav-item"><a href="MainController?action=SearchHomeMode" class="nav-link"><i class="fas fa-moon"></i> Chế độ (Modes)</a></li>
-      <li class="nav-item"><a href="MainController?action=SearchRule" class="nav-link"><i class="fas fa-moon"></i> Luật lệ </a></li>
+      <li class="nav-item"><a href="DashBoard.jsp" class="nav-link"><i class="fas fa-th-large"></i> Main menu </a></li>
+      <li class="nav-item"><a href="MainController?action=SearchHome" class="nav-link"><i class="fas fa-building"></i> Home </a></li>
+      <li class="nav-item"><a href="MainController?action=SearchRoom" class="nav-link"><i class="fas fa-couch"></i> Room </a></li>
+      <li class="nav-item"><a href="MainController?action=SearchDevice" class="nav-link"><i class="fas fa-lightbulb"></i> Device </a></li>
+      <li class="nav-item"><a href="MainController?action=SearchHomeMode" class="nav-link"><i class="fas fa-moon"></i> Modes </a></li>
+      <li class="nav-item"><a href="MainController?action=SearchRule" class="nav-link"><i class="fas fa-cogs"></i> Rule </a></li>
     </ul>
   </aside>
 
@@ -162,15 +162,15 @@
           if (userName == null)
             userName = "bạn";
         %>
-        <h1>Chào buổi chiều, <%= userName%>! ⛅</h1>
-        <p>Hôm nay là một ngày tuyệt vời để thư giãn.</p>
+        <h1>Welcome, <%= userName%>! ⛅</h1>
+        <p>Today is a beautiful day to relax.</p>
       </div>
       <div class="header-actions">
-        <div class="btn-circle" title="Thời tiết"><i class="fas fa-cloud-sun"></i></div>
-        <div class="btn-circle" title="Thông báo"><i class="fas fa-bell"></i></div>
+        <div class="btn-circle" title="Weather"><i class="fas fa-cloud-sun"></i></div>
+        <div class="btn-circle" title="Notification"><i class="fas fa-bell"></i></div>
         <form action="MainController" style="margin:0;">
           <input type="hidden" name="action" value="Logout">
-          <button type="submit" class="btn-circle" style="background: var(--accent-color); color: white;" title="Đăng xuất"><i class="fas fa-power-off"></i></button>
+          <button type="submit" class="btn-circle" style="background: var(--accent-color); color: white;" title="Logout"><i class="fas fa-power-off"></i></button>
         </form>
       </div>
     </header>
