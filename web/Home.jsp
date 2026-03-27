@@ -3,6 +3,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@ include file="Menu.jsp" %>
+<title>Home Management - Smart Home</title>
 
 <style>
   .filter-box {
