@@ -1,18 +1,15 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" isErrorPage="true" %>
 <%
-    // Tự động bắt mã lỗi từ Server (404, 500...)
     Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
     if (statusCode == null) {
-        statusCode = 404; // Mặc định để test
+        statusCode = 404; 
     }
 
-    // Tự động bắt cái đường link bị gõ sai (vd: /SmartHome/trash.jsp)
     String errorUri = (String) request.getAttribute("javax.servlet.error.request_uri");
     if (errorUri == null) {
         errorUri = "the requested page";
     }
 
-    // Tạo câu thông báo chi tiết
     String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
     if (errorMessage == null || errorMessage.trim().isEmpty()) {
         if (statusCode == 404) {
@@ -34,7 +31,7 @@
 
             body {
                 font-family: 'Nunito', sans-serif;
-                background-color: #FAF7F2; /* Màu nền kem */
+                background-color: #FAF7F2; 
                 margin: 0;
                 height: 100vh;
                 display: flex;
@@ -61,7 +58,7 @@
             .error-code {
                 font-size: 55px;
                 font-weight: 800;
-                color: #E76F51; /* Màu đỏ Terracotta */
+                color: #E76F51; 
                 margin: 0 0 10px 0;
                 line-height: 1;
                 letter-spacing: 2px;
@@ -84,7 +81,7 @@
             .btn-home {
                 display: inline-block;
                 padding: 12px 30px;
-                background-color: #82A284; /* Xanh Sage Green */
+                background-color: #82A284; 
                 color: white;
                 text-decoration: none;
                 border-radius: 10px;
@@ -122,7 +119,7 @@
 
             <p class="error-message"><%= errorMessage%></p>
 
-            <a href="MainController?action=Dashboard" class="btn-home">Return to Home</a>
+            <a href="DashBoard.jsp" class="btn-home">Return to Home</a>
         </div>
     </body>
 </html>

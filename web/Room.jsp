@@ -9,7 +9,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Room Management - Smart Home</title>
     <style>
-      /* Import font Nunito cho đồng bộ với Menu */
       @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
       body {
@@ -26,7 +25,6 @@
         margin-bottom: 20px;
       }
 
-      /* Định dạng Box Lọc (Filter) */
       .filter-box {
         background: #FFFFFF;
         padding: 15px 20px;
@@ -55,7 +53,6 @@
         outline: none;
       }
 
-      /* Định dạng Bảng (Table) */
       table {
         width: 100%;
         border-collapse: separate;
@@ -87,7 +84,6 @@
         border-bottom: none;
       }
 
-      /* Định dạng Nút Bấm (Buttons) */
       .btn {
         padding: 8px 16px;
         text-decoration: none;
@@ -137,7 +133,6 @@
         background-color: #A9927D;
       }
 
-      /* Thông báo lỗi / thành công */
       .msg {
         padding: 10px;
         border-radius: 8px;
@@ -155,7 +150,6 @@
         border: 1px solid #f5c6cb;
       }
 
-      /* Gộp 2 nút Edit/Delete nằm trên cùng 1 hàng */
       .action-forms {
         display: flex;
         gap: 5px;

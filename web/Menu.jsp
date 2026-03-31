@@ -27,7 +27,6 @@
     height: 100%;
   }
 
-  /* Sidebar */
   .sidebar {
     width: 250px;
     background-color: var(--sidebar-bg);
@@ -89,14 +88,12 @@
     color: var(--accent-color);
   }
 
-  /* Main Content */
   .main-content {
     flex-grow: 1;
     padding: 30px 40px;
     overflow-y: auto;
   }
 
-  /* Header */
   .header {
     display: flex;
     justify-content: space-between;

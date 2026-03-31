@@ -70,25 +70,24 @@
             }
 
             th {
-                background-color: #D4A373; /* Tiêu đề bảng màu Caramel */
+                background-color: #D4A373; 
                 color: white;
                 font-weight: 600;
                 letter-spacing: 0.5px;
             }
 
             tbody tr:hover {
-                background-color: #FDFBF7; /* Highlight nền kem nhẹ khi rẽ chuột */
+                background-color: #FDFBF7; 
             }
 
             tbody tr:last-child td {
-                border-bottom: none; /* Xóa viền dòng cuối cùng cho đẹp */
+                border-bottom: none; 
             }
 
-            /* Định dạng Nút Bấm (Buttons) */
             .btn {
                 padding: 8px 16px;
                 text-decoration: none;
-                border-radius: 8px; /* Bo tròn viên thuốc */
+                border-radius: 8px; 
                 color: white;
                 border: none;
                 cursor: pointer;
@@ -99,15 +98,14 @@
             }
 
             .btn:hover {
-                transform: translateY(-2px); /* Hiệu ứng nảy nhẹ */
+                transform: translateY(-2px); 
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
 
-            /* Bảng màu Cozy cho từng loại nút */
             .btn-add {
                 background-color: #82A284;
                 margin-bottom: 15px;
-            } /* Xanh Sage Green */
+            } 
             .btn-add:hover {
                 background-color: #6C8C6E;
             }
@@ -115,24 +113,24 @@
             .btn-edit {
                 background-color: #E9C46A;
                 color: #4A3324;
-            } /* Vàng Mustard */
+            } 
             .btn-edit:hover {
                 background-color: #D4B055;
             }
 
             .btn-delete {
                 background-color: #E76F51;
-            } /* Đỏ Terracotta */
+            } 
             .btn-delete:hover {
                 background-color: #D05D43;
             }
 
             .btn-active {
                 background-color: #82A284;
-            } /* Xanh Sage */
+            } 
             .btn-inactive {
                 background-color: #A9927D;
-            } /* Nâu xám nhẹ */
+            } 
         </style>
     </head>
     <body>

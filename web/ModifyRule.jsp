@@ -58,7 +58,6 @@
                 border: 1px solid #E6D5B8;
             }
 
-            /* --- NÚT TÍM - CAM ĐÃ ĐƯỢC ĐỒNG BỘ --- */
             .btn-submit {
                 background-color: #6C5CE7;
                 color: white;

@@ -121,4 +121,21 @@ public class HomeDAO {
 
     return false;
   }
+  
+  public boolean toggleHomeStatus(int homeId, boolean status) {
+      boolean check = false;
+      String query = "UPDATE HOME SET STATUS = ? WHERE ID = ?";
+      try (Connection conn = DBUtils.getConnection();
+              PreparedStatement stmt = conn.prepareStatement(query)) {
+          stmt.setBoolean(1, status);
+          stmt.setInt(2, homeId);
+          
+          if(stmt.executeUpdate() > 0) {
+              check = true;
+          }
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      return check;
+  }
 }

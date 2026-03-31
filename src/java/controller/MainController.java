@@ -56,6 +56,7 @@ public class MainController extends HttpServlet {
                     case "UpdateHome":
                     case "DeleteHome":
                     case "FormHome":
+                    case "ToggleHome":
                         url = HOME_SERVLET;
                         break;
 
@@ -64,6 +65,7 @@ public class MainController extends HttpServlet {
                     case "UpdateRoom":
                     case "DeleteRoom":
                     case "FormRoom":
+                    case "ToggleRoom":
                         url = ROOM_SERVLET;
                         break;
 
@@ -72,6 +74,7 @@ public class MainController extends HttpServlet {
                     case "UpdateRule":
                     case "DeleteRule":
                     case "FormRule":
+                    case "ToggleRule":
                         url = RULE_SERVLET;
                         break;
                     case "SearchDevice":

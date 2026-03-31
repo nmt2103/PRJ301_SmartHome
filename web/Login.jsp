@@ -6,7 +6,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Login - Smart Home</title>
     <style>
-      /* Import font Nunito */
       @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
       body, html {
@@ -80,7 +79,6 @@
         font-size: 15px;
       }
 
-      /* Định dạng Form và Input */
       .form-group {
         text-align: left;
         margin-bottom: 20px;

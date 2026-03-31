@@ -121,11 +121,19 @@
             .btn-active {
                 background-color: #82A284;
             }
+            /* Thêm hiệu ứng hover cho nút Active */
+            .btn-active:hover {
+                background-color: #6C8C6E;
+            }
+
             .btn-inactive {
                 background-color: #A9927D;
             }
+            /* Thêm hiệu ứng hover cho nút Inactive */
+            .btn-inactive:hover {
+                background-color: #8A7360;
+            }
 
-            /* CSS làm đẹp cho thông báo Lỗi / Thành công */
             .alert {
                 padding: 10px 15px;
                 border-radius: 8px;
@@ -204,9 +212,11 @@
                                 <td>${rule.priority}</td>
 
                                 <td>
-                                    <span class="btn ${rule.status ? 'btn-active' : 'btn-inactive'}" style="padding: 4px 10px; cursor: default;">
+                                    <a href="MainController?action=ToggleRule&ruleId=${rule.id}&currentStatus=${rule.status}" 
+                                       class="btn ${rule.status ? 'btn-active' : 'btn-inactive'}" 
+                                       style="padding: 4px 10px; text-decoration: none;">
                                         ${rule.status ? 'Active' : 'Inactive'}
-                                    </span>
+                                    </a>
                                 </td>
 
                                 <td>
@@ -229,7 +239,5 @@
             </tbody>
         </table>
 
-    </main>
-</div>
 </body>
 </html>

@@ -15,185 +15,166 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "RuleServlet", urlPatterns = {"/RuleServlet"})
 public class RuleServlet extends HttpServlet {
 
-  private static final String ERROR_PAGE = "Error.jsp";
-  private static final String RULE_PAGE = "Rule.jsp";
-  private static final String FORM_PAGE = "ModifyRule.jsp";
+    private static final String ERROR_PAGE = "Error.jsp";
+    private static final String RULE_PAGE = "Rule.jsp";
+    private static final String FORM_PAGE = "ModifyRule.jsp";
+    private static final String SEARCH_ACTION = "MainController?action=SearchRule";
 
-  private static final String SEARCH_ACTION = "MainController?action=SearchRule";
+    // =========================================================
+    // LUỒNG GET: CHUYÊN HIỂN THỊ GIAO DIỆN, XÓA & TOGGLE
+    // =========================================================
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
-  /**
-   * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-   *
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
-  protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
-
-    String url = ERROR_PAGE;
-    boolean isRedirect = false;
-
-    try {
-      String action = request.getParameter("action");
-
-      RuleDAO ruleDAO = new RuleDAO();
-
-      if (request.getMethod().equalsIgnoreCase("GET")) {
-
-        if (action.equals("SearchRule")) {
-          String searchName = request.getParameter("searchName");
-          String filterStatus = request.getParameter("filterStatus");
-
-          List<RuleDTO> rules = ruleDAO.getRules(searchName, filterStatus);
-
-          if (rules == null || rules.isEmpty()) {
-            rules = ruleDAO.getRules("", "");
-
-            request.setAttribute("ERROR_MSG", "Rules not found! Showing all rules.");
-          }
-
-          request.setAttribute("RULE_LIST", rules);
-          url = RULE_PAGE;
-
-        } else if (action.equals("FormRule")) {
-          RuleDTO rule = null;
-          HomeDAO homeDAO = new HomeDAO();
-          List<HomeDTO> homes = homeDAO.getHomes("", "1");
-
-          if (request.getParameter("ruleId") != null) {
-            String ruleId = request.getParameter("ruleId");
-
-            rule = ruleDAO.getRuleById(ruleId);
-
-            request.setAttribute("RULE", rule);
-          }
-
-          request.setAttribute("ACTION", rule == null ? "Add" : "Update");
-          request.setAttribute("HOME_LIST", homes);
-          url = FORM_PAGE;
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "SearchRule";
         }
-      } else {
 
-        if (action.equals("AddRule")) {
-          int homeId = Integer.parseInt(request.getParameter("homeId"));
-          String name = request.getParameter("name");
-          String type = request.getParameter("type");
-          int priority = Integer.parseInt(request.getParameter("priority"));
-          boolean status = Boolean.parseBoolean(request.getParameter("status"));
+        RuleDAO ruleDAO = new RuleDAO();
 
-          RuleDTO addRule = new RuleDTO(homeId, name, type, priority, status);
-          boolean isDuplicate = ruleDAO.checkDuplicateName(name, homeId, addRule.getId());
-          if (isDuplicate) {
-            request.setAttribute("ERROR_MSG",
-                    "Duplicate rule in home - Home ID: " + homeId);
-            url = FORM_PAGE;
-            isRedirect = false;
-          }
+        try {
+            switch (action) {
+                case "SearchRule":
+                    String searchName = request.getParameter("searchName");
+                    String filterStatus = request.getParameter("filterStatus");
 
-          boolean isSuccess = ruleDAO.insertRule(addRule);
-          if (isSuccess) {
-            url = SEARCH_ACTION;
-            isRedirect = true;
-          } else {
-            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-            url = FORM_PAGE;
-            isRedirect = false;
-          }
+                    List<RuleDTO> rules = ruleDAO.getRules(searchName, filterStatus);
 
-        } else if (action.equals("UpdateRule")) {
-          int homeId = Integer.parseInt(request.getParameter("homeId"));
-          int id = Integer.parseInt(request.getParameter("ruleId"));
-          String name = request.getParameter("name");
-          String type = request.getParameter("type");
-          int priority = Integer.parseInt(request.getParameter("priority"));
-          boolean status = Boolean.parseBoolean(request.getParameter("status"));
+                    if (rules == null || rules.isEmpty()) {
+                        rules = ruleDAO.getRules("", "");
+                        request.setAttribute("ERROR_MSG", "Rules not found! Showing all rules.");
+                    }
 
-          RuleDTO updRule = new RuleDTO(name, id, type, priority, status);
-          boolean isDuplicate = ruleDAO.checkDuplicateName(name, homeId, id);
-          if (isDuplicate) {
-            request.setAttribute("ERROR_MSG", "Duplicate rule in home - " + homeId);
-            url = FORM_PAGE;
-            isRedirect = false;
-          }
+                    request.setAttribute("RULE_LIST", rules);
+                    request.getRequestDispatcher(RULE_PAGE).forward(request, response);
+                    break;
 
-          boolean isSuccess = ruleDAO.updateRule(updRule);
-          if (isSuccess) {
-            url = SEARCH_ACTION;
-            isRedirect = true;
-          } else {
-            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-            url = FORM_PAGE;
-            isRedirect = false;
-          }
+                case "FormRule":
+                    RuleDTO rule = null;
+                    HomeDAO homeDAO = new HomeDAO();
+                    List<HomeDTO> homes = homeDAO.getHomes("", "1"); // Lấy danh sách nhà đang Active
 
-        } else if (action.equals("DeleteRule")) {
-          int id = Integer.parseInt(request.getParameter("ruleId"));
+                    String ruleIdStr = request.getParameter("ruleId");
+                    if (ruleIdStr != null && !ruleIdStr.isEmpty()) {
+                        rule = ruleDAO.getRuleById(ruleIdStr);
+                        request.setAttribute("RULE", rule);
+                    }
 
-          boolean isSuccess = ruleDAO.deleteRule(id);
-          if (isSuccess) {
-            url = SEARCH_ACTION;
-            isRedirect = true;
-          } else {
-            request.setAttribute("ERROR_MSG", "Error! Something wrong happened.");
-            url = RULE_PAGE;
-            isRedirect = false;
-          }
+                    request.setAttribute("ACTION", rule == null ? "Add" : "Update");
+                    request.setAttribute("HOME_LIST", homes);
+                    request.getRequestDispatcher(FORM_PAGE).forward(request, response);
+                    break;
 
+                case "DeleteRule":
+                    int delId = Integer.parseInt(request.getParameter("ruleId"));
+                    boolean isSuccess = ruleDAO.deleteRule(delId);
+
+                    if (isSuccess) {
+                        response.sendRedirect(SEARCH_ACTION);
+                    } else {
+                        request.setAttribute("ERROR_MSG", "Error! Cannot delete this rule.");
+                        request.getRequestDispatcher(RULE_PAGE).forward(request, response);
+                    }
+                    break;
+
+                // ---> ĐÃ THÊM CHỨC NĂNG TOGGLE RULE Ở ĐÂY <---
+                case "ToggleRule":
+                    int toggleId = Integer.parseInt(request.getParameter("ruleId"));
+                    boolean currentStatus = Boolean.parseBoolean(request.getParameter("currentStatus"));
+
+                    // Gọi hàm đổi trạng thái (đảo ngược currentStatus bằng dấu !)
+                    ruleDAO.toggleRuleStatus(toggleId, !currentStatus);
+
+                    // Xong thì load lại trang Search
+                    response.sendRedirect(SEARCH_ACTION);
+                    break;
+
+                default:
+                    request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
+            }
+        } catch (Exception e) {
+            log("Error at RuleServlet doGet: " + e.toString());
+            request.setAttribute("ERROR_MSG", "System error: " + e.toString());
+            request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
         }
-      }
-    } catch (Exception e) {
-      log("Error at RuleServlet: " + e.toString());
-      request.setAttribute("ERROR_MSG", "Business error at Rule: " + e.toString());;
-      isRedirect = false;
-    } finally {
-      if (isRedirect) {
-        response.sendRedirect(url);
-      } else {
-        request.getRequestDispatcher(url).forward(request, response);
-      }
     }
-  }
 
-  // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-  /**
-   * Handles the HTTP <code>GET</code> method.
-   *
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
-    processRequest(request, response);
-  }
+    // =========================================================
+    // LUỒNG POST: CHUYÊN XỬ LÝ LƯU (THÊM / SỬA) TỪ FORM
+    // =========================================================
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
-  /**
-   * Handles the HTTP <code>POST</code> method.
-   *
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
-    processRequest(request, response);
-  }
+        String action = request.getParameter("action");
+        RuleDAO ruleDAO = new RuleDAO();
+        HomeDAO homeDAO = new HomeDAO();
 
-  /**
-   * Returns a short description of the servlet.
-   *
-   * @return a String containing servlet description
-   */
-  @Override
-  public String getServletInfo() {
-    return "Short description";
-  }// </editor-fold>
+        try {
+            switch (action) {
+                case "AddRule": {
+                    int homeId = Integer.parseInt(request.getParameter("homeId"));
+                    String name = request.getParameter("name");
+                    String type = request.getParameter("type");
+                    int priority = Integer.parseInt(request.getParameter("priority"));
+                    boolean status = Boolean.parseBoolean(request.getParameter("status"));
 
+                    RuleDTO addRule = new RuleDTO(homeId, name, type, priority, status);
+                    boolean isDuplicate = ruleDAO.checkDuplicateName(name, homeId, addRule.getId());
+
+                    if (isDuplicate) {
+                        request.setAttribute("ERROR_MSG", "Duplicate rule in home - Home ID: " + homeId);
+                        request.setAttribute("HOME_LIST", homeDAO.getHomes("", "1"));
+                        request.setAttribute("ACTION", "Add");
+                        request.getRequestDispatcher(FORM_PAGE).forward(request, response);
+                        return;
+                    }
+
+                    ruleDAO.insertRule(addRule);
+                    response.sendRedirect(SEARCH_ACTION);
+                    break;
+                }
+
+                case "UpdateRule": {
+                    int homeId = Integer.parseInt(request.getParameter("homeId"));
+                    int id = Integer.parseInt(request.getParameter("ruleId"));
+                    String name = request.getParameter("name");
+                    String type = request.getParameter("type");
+                    int priority = Integer.parseInt(request.getParameter("priority"));
+                    boolean status = Boolean.parseBoolean(request.getParameter("status"));
+
+                    RuleDTO updRule = new RuleDTO(name, id, type, priority, status);
+                    boolean isDuplicate = ruleDAO.checkDuplicateName(name, homeId, id);
+
+                    if (isDuplicate) {
+                        request.setAttribute("ERROR_MSG", "Duplicate rule in home - Home ID: " + homeId);
+                        request.setAttribute("HOME_LIST", homeDAO.getHomes("", "1"));
+                        request.setAttribute("RULE", updRule);
+                        request.setAttribute("ACTION", "Update");
+                        request.getRequestDispatcher(FORM_PAGE).forward(request, response);
+                        return;
+                    }
+
+                    ruleDAO.updateRule(updRule);
+                    response.sendRedirect(SEARCH_ACTION);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            log("Error at RuleServlet doPost: " + e.toString());
+            request.setAttribute("ERROR_MSG", "System error: " + e.toString());
+            request.getRequestDispatcher(ERROR_PAGE).forward(request, response);
+        }
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Rule Management Servlet";
+    }
 }
